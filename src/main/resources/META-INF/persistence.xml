@@ -1,0 +1,30 @@
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence" version="3.0">
+
+    <persistence-unit name="library">
+        <description>Student Homework Hibernate</description>
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+
+        <class>org.abrohamovich.entity.Patron</class>
+        <class>org.abrohamovich.entity.Book</class>
+        <class>org.abrohamovich.entity.BookInstance</class>
+        <class>org.abrohamovich.entity.Author</class>
+        <class>org.abrohamovich.entity.Category</class>
+        <class>org.abrohamovich.entity.Genre</class>
+        <class>org.abrohamovich.entity.Publisher</class>
+
+        <properties>
+            <property name="jakarta.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+            <property name="jakarta.persistence.jdbc.url" value=""/>
+            <property name="jakarta.persistence.jdbc.user" value=""/>
+            <property name="jakarta.persistence.jdbc.password" value=" "/>
+
+            <property name="hibernate.show_sql" value="true"/>
+
+            <property name="eclipselink.logging.level.sql" value="FINE"/>
+            <property name="eclipselink.logging.parameters" value="true"/>
+            <property name="hibernate.hbm2ddl.auto" value="create"/>
+            <property name="hibernate.jdbc.time_zone" value="UTC"/>
+        </properties>
+    </persistence-unit>
+
+</persistence>
