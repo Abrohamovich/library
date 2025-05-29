@@ -27,10 +27,10 @@ public class CategoryRepository implements GenericRepo<Category, Long> {
             return Optional.ofNullable(entity);
         } catch (PersistenceException e) {
             rollbackTransaction(em);
-            log.error("Persistence error while saving category", e);
+            log.error("Persistence error while saving category: {}", e.getMessage());
         } catch (Exception e) {
             rollbackTransaction(em);
-            log.error("Unexpected error while saving category", e);
+            log.error("Unexpected error while saving category: {}", e.getMessage());
         } finally {
             em.close();
         }
@@ -42,9 +42,9 @@ public class CategoryRepository implements GenericRepo<Category, Long> {
         try (EntityManager em = emf.createEntityManager()) {
             return Optional.ofNullable(em.find(Category.class, id));
         } catch (PersistenceException e) {
-            log.error("Persistence error while finding category by id {}", id, e);
+            log.error("Persistence error while finding category by id {}: {}", id, e.getMessage());
         } catch (Exception e) {
-            log.error("Unexpected error while finding category by id {}", id, e);
+            log.error("Unexpected error while finding category by id {}: {}", id, e.getMessage());
         }
         return Optional.empty();
     }
@@ -58,11 +58,27 @@ public class CategoryRepository implements GenericRepo<Category, Long> {
 
             return Optional.ofNullable(query.getSingleResult());
         } catch (PersistenceException e) {
-            log.error("Persistence error while finding category by name - {}", name, e);
+            log.error("Persistence error while finding category by name - {}: {}", name, e.getMessage());
         } catch (Exception e) {
-            log.error("Unexpected error while finding category by name - {}", name, e);
+            log.error("Unexpected error while finding category by name - {}: {}", name, e.getMessage());
         }
         return Optional.empty();
+    }
+
+    public List<Category> findByNameLike(String name) {
+        try (EntityManager em = emf.createEntityManager()) {
+            TypedQuery<Category> query = em.createQuery(
+                    "SELECT c FROM Category c WHERE c.name ILIKE :name", Category.class);
+
+            query.setParameter("name", "%" + name + "%");
+
+            return query.getResultList();
+        } catch (PersistenceException e) {
+            log.error("Persistence error while finding category by name - {}: {}", name, e.getMessage());
+        } catch (Exception e) {
+            log.error("Unexpected error while finding category by name - {}: {}", name, e.getMessage());
+        }
+        return Collections.emptyList();
     }
 
     @Override
@@ -70,9 +86,9 @@ public class CategoryRepository implements GenericRepo<Category, Long> {
         try (EntityManager em = emf.createEntityManager()) {
             return em.createQuery("SELECT c FROM Category c", Category.class).getResultList();
         } catch (PersistenceException e) {
-            log.error("Persistence error while finding all categories", e);
+            log.error("Persistence error while finding all categories: {}", e.getMessage());
         } catch (Exception e) {
-            log.error("Unexpected error while finding all categories", e);
+            log.error("Unexpected error while finding all categories: {}", e.getMessage());
         }
         return Collections.emptyList();
     }
@@ -87,10 +103,10 @@ public class CategoryRepository implements GenericRepo<Category, Long> {
             return Optional.ofNullable(updated);
         } catch (PersistenceException e) {
             rollbackTransaction(em);
-            log.error("Persistence error while updating category with id {}", entity.getId(), e);
+            log.error("Persistence error while updating category with id {}: {}", entity.getId(), e.getMessage());
         } catch (Exception e) {
             rollbackTransaction(em);
-            log.error("Unexpected error while updating category with id {}", entity.getId(), e);
+            log.error("Unexpected error while updating category with id {}: {}", entity.getId(), e.getMessage());
         } finally {
             em.close();
         }
@@ -109,10 +125,10 @@ public class CategoryRepository implements GenericRepo<Category, Long> {
             em.getTransaction().commit();
         } catch (PersistenceException e) {
             rollbackTransaction(em);
-            log.error("Persistence error while deleting category with id {}", id, e);
+            log.error("Persistence error while deleting category with id {}: {}", id, e.getMessage());
         } catch (Exception e) {
             rollbackTransaction(em);
-            log.error("Unexpected error while deleting category with id {}", id, e);
+            log.error("Unexpected error while deleting category with id {}: {}", id, e.getMessage());
         } finally {
             em.close();
         }

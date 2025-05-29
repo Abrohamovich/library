@@ -18,8 +18,7 @@ for testing.
 ## Features
 
 - **Book Management**:
-    - Manage books as literary works (`Book`) with details like title, ISBN, authors, genres, and categories.
-    - Manage physical book instances (`BookInstance`) with attributes like publisher, page count, receipt date, status,
+    - Manage physical book instances (`Book`) with attributes like title, ISBN, authors, genres, categories, publisher, page count, receipt date, status,
       and format.
 - **Author Management**:
     - Store author details including name, date of birth, sex, and nationality.
@@ -44,7 +43,7 @@ for testing.
 
 The project follows a clean, modular architecture:
 
-- **Entities**: JPA-annotated classes (`Author`, `Book`, `BookInstance`, `Category`, `Genre`, `Patron`, `Publisher`)
+- **Entities**: JPA-annotated classes (`Author`, `Book`, `Category`, `Genre`, `Patron`, `Publisher`)
   representing the data model.
 - **Repositories**: Interfaces and implementations for data access using Hibernate.
 - **Services**: Business logic for managing entities, including CRUD operations and book lending workflows.

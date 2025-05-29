@@ -22,15 +22,14 @@ public class Patron {
     private String cardId;
     @Column(name = "full_name", nullable = false)
     private String fullName;
-    @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @OneToMany
     @JoinTable(
-            name = "t_patron_book_instance",
+            name = "t_patron_book",
             joinColumns = @JoinColumn(name = "patron_id"),
-            inverseJoinColumns = @JoinColumn(name = "book_instance_id"),
-            uniqueConstraints = @UniqueConstraint(columnNames = "book_instance_id")
+            inverseJoinColumns = @JoinColumn(name = "book_id")
     )
     @Builder.Default
-    private Set<BookInstance> books = new HashSet<>();
+    private Set<Book> books = new HashSet<>();
     @Column(name = "email", nullable = false, unique = true)
     private String email;
     @Column(name = "phone", nullable = false, unique = true)
@@ -41,12 +40,4 @@ public class Patron {
     private LocalDate dateOfBirth;
     @Column(name = "register_date", nullable = false)
     private LocalDate registerDate;
-
-    public boolean addBookInstance(BookInstance bookInstance) {
-        return books.add(bookInstance);
-    }
-
-    public boolean removeBookInstance(BookInstance bookInstance) {
-        return books.remove(bookInstance);
-    }
 }

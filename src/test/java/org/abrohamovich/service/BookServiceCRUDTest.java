@@ -1,12 +1,7 @@
 package org.abrohamovich.service;
 
-import org.abrohamovich.dto.AuthorDto;
-import org.abrohamovich.dto.BookDto;
-import org.abrohamovich.dto.CategoryDto;
-import org.abrohamovich.dto.GenreDto;
-import org.abrohamovich.entity.Book;
-import org.abrohamovich.entity.Sex;
-import org.abrohamovich.exceptions.BookAlreadyExistException;
+import org.abrohamovich.dto.*;
+import org.abrohamovich.entity.*;
 import org.abrohamovich.exceptions.BookNotFoundException;
 import org.abrohamovich.exceptions.EntityException;
 import org.abrohamovich.mapper.BookMapper;
@@ -43,19 +38,20 @@ class BookServiceCRUDTest {
     void setUp() {
         UUID isbn = UUID.randomUUID();
         book1 = Book.builder()
-                .id(1L).title("Book One").isbn(isbn.toString()).language("English")
-                .genres(Set.of()).categories(Set.of()).authors(Set.of())
+                .id(1L).title("Book One").isbn(isbn.toString()).language("English").numberOfPages(130)
+                .authors(Set.of()).genres(Set.of()).categories(Set.of()).publisher(mock(Publisher.class))
+                .status(Status.AVAILABLE).format(Format.HARDCOVER).receiptDate(LocalDate.now())
                 .build();
 
         bookDto1 = BookDto.builder()
-                .id(1L).title("Book One").isbn(isbn.toString()).language("English")
-                .genres(Set.of()).categories(Set.of()).authors(Set.of())
+                .id(1L).title("Book One").isbn(isbn.toString()).language("English").numberOfPages(130)
+                .authors(Set.of()).genres(Set.of()).categories(Set.of()).publisher(mock(PublisherDto.class))
+                .status(Status.AVAILABLE).format(Format.HARDCOVER).receiptDate(LocalDate.now())
                 .build();
     }
 
     @Test
     void save_ReturnsBookDto() {
-        when(bookRepository.findByIsbn(bookDto1.getIsbn())).thenReturn(Optional.empty());
         when(bookMapper.toEntity(bookDto1)).thenReturn(book1);
         when(bookRepository.save(book1)).thenReturn(Optional.of(book1));
         when(bookMapper.toDto(book1)).thenReturn(bookDto1);
@@ -64,7 +60,6 @@ class BookServiceCRUDTest {
 
         assertNotNull(result);
         assertEquals(bookDto1.getId(), result.getId());
-        verify(bookRepository).findByIsbn(bookDto1.getIsbn());
         verify(bookMapper).toEntity(bookDto1);
         verify(bookRepository).save(book1);
         verify(bookMapper).toDto(book1);
@@ -79,23 +74,11 @@ class BookServiceCRUDTest {
     }
 
     @Test
-    void save_ThrowsBookAlreadyExistException() {
-        when(bookRepository.findByIsbn(bookDto1.getIsbn())).thenReturn(Optional.of(book1));
-
-        assertThrows(BookAlreadyExistException.class, () -> bookServiceCRUD.save(bookDto1));
-        verify(bookRepository).findByIsbn(bookDto1.getIsbn());
-        verify(bookMapper, never()).toEntity(any());
-        verify(bookRepository, never()).save(any());
-    }
-
-    @Test
     void save_ThrowsEntityException() {
-        when(bookRepository.findByIsbn(bookDto1.getIsbn())).thenReturn(Optional.empty());
         when(bookMapper.toEntity(bookDto1)).thenReturn(book1);
         when(bookRepository.save(book1)).thenReturn(Optional.empty());
 
         assertThrows(EntityException.class, () -> bookServiceCRUD.save(bookDto1));
-        verify(bookRepository).findByIsbn(bookDto1.getIsbn());
         verify(bookMapper).toEntity(bookDto1);
         verify(bookRepository).save(book1);
         verify(bookMapper, never()).toDto(any());
@@ -124,14 +107,14 @@ class BookServiceCRUDTest {
     }
 
     @Test
-    void findByIsbn_ReturnsBookDto() {
-        when(bookRepository.findByIsbn(bookDto1.getIsbn())).thenReturn(Optional.of(book1));
+    void findByIsbn_ReturnsBooks() {
+        when(bookRepository.findByIsbn(bookDto1.getIsbn())).thenReturn(List.of(book1));
         when(bookMapper.toDto(book1)).thenReturn(bookDto1);
 
-        BookDto result = bookServiceCRUD.findByIsbn(bookDto1.getIsbn());
+        List<BookDto> result = bookServiceCRUD.findByIsbn(bookDto1.getIsbn());
 
         assertNotNull(result);
-        assertEquals(bookDto1.getId(), result.getId());
+        assertEquals(bookDto1.getId(), result.getFirst().getId());
         verify(bookRepository).findByIsbn(bookDto1.getIsbn());
         verify(bookMapper).toDto(book1);
     }
@@ -143,17 +126,9 @@ class BookServiceCRUDTest {
     }
 
     @Test
-    void findByIsbn_ThrowsBookNotFoundException() {
-        when(bookRepository.findByIsbn(bookDto1.getIsbn())).thenReturn(Optional.empty());
-
-        assertThrows(BookNotFoundException.class, () -> bookServiceCRUD.findByIsbn(bookDto1.getIsbn()));
-        verify(bookRepository).findByIsbn(bookDto1.getIsbn());
-        verify(bookMapper, never()).toDto(any());
-    }
-
-    @Test
     void findByAuthors_ReturnsBooks() {
-        List<AuthorDto> authors = List.of(AuthorDto.builder().id(1L).sex(Sex.MALE).nationality("German").fullName("name").dateOfBirth(LocalDate.now()).build());
+        List<AuthorDto> authors = List.of(AuthorDto.builder().id(1L).sex(Sex.MALE).nationality("German")
+                .fullName("name").dateOfBirth(LocalDate.now()).build());
         when(bookRepository.findByAuthorIds(List.of(1L))).thenReturn(List.of(book1));
         when(bookMapper.toDto(book1)).thenReturn(bookDto1);
 
@@ -215,6 +190,68 @@ class BookServiceCRUDTest {
         assertThrows(IllegalArgumentException.class, () -> bookServiceCRUD.findByCategories(null));
         assertThrows(IllegalArgumentException.class, () -> bookServiceCRUD.findByCategories(Collections.emptyList()));
         verify(bookRepository, never()).findByCategoryIds(any());
+    }
+
+
+    @Test
+    void findByPublisher_ReturnsListOfBookInstanceDto() {
+        PublisherDto publisherDto = PublisherDto.builder().id(1L).name("smth").foundationDate(LocalDate.now()).build();
+        when(bookRepository.findByPublisherId(1L)).thenReturn(List.of(book1));
+        when(bookMapper.toDto(book1)).thenReturn(bookDto1);
+
+        List<BookDto> result = bookServiceCRUD.findByPublisher(publisherDto);
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals(bookDto1.getId(), result.getFirst().getId());
+        verify(bookRepository).findByPublisherId(1L);
+        verify(bookMapper).toDto(book1);
+    }
+
+    @Test
+    void findByPublisher_ThrowsIllegalArgumentException() {
+        assertThrows(IllegalArgumentException.class, () -> bookServiceCRUD.findByPublisher(null));
+        verify(bookRepository, never()).findByPublisherId(anyLong());
+    }
+
+    @Test
+    void findByStatus_ReturnsListOfBookInstanceDto() {
+        when(bookRepository.findByStatus(Status.AVAILABLE)).thenReturn(List.of(book1));
+        when(bookMapper.toDto(book1)).thenReturn(bookDto1);
+
+        List<BookDto> result = bookServiceCRUD.findByStatus(Status.AVAILABLE);
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals(bookDto1.getId(), result.getFirst().getId());
+        verify(bookRepository).findByStatus(Status.AVAILABLE);
+        verify(bookMapper).toDto(book1);
+    }
+
+    @Test
+    void findByStatus_ThrowsIllegalArgumentException() {
+        assertThrows(IllegalArgumentException.class, () -> bookServiceCRUD.findByStatus(null));
+        verify(bookRepository, never()).findByStatus(any());
+    }
+
+    @Test
+    void findByFormat_ReturnsListOfBookInstanceDto() {
+        when(bookRepository.findByFormat(Format.PAPERBACK)).thenReturn(List.of(book1));
+        when(bookMapper.toDto(book1)).thenReturn(bookDto1);
+
+        List<BookDto> result = bookServiceCRUD.findByFormat(Format.PAPERBACK);
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals(bookDto1.getId(), result.getFirst().getId());
+        verify(bookRepository).findByFormat(Format.PAPERBACK);
+        verify(bookMapper).toDto(book1);
+    }
+
+    @Test
+    void findByFormat_ThrowsIllegalArgumentException() {
+        assertThrows(IllegalArgumentException.class, () -> bookServiceCRUD.findByFormat(null));
+        verify(bookRepository, never()).findByFormat(any());
     }
 
     @Test

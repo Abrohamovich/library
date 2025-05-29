@@ -73,6 +73,20 @@ public class GenreServiceCRUD implements GenreService {
     }
 
     @Override
+    public List<GenreDto> findByNameLike(String name) throws IllegalArgumentException {
+        if (name.isBlank()) {
+            log.error("Invalid argument: blank name");
+            throw new IllegalArgumentException("Invalid argument: blank name");
+        }
+        log.debug("Searching for genre with name: {}", name);
+        List<Genre> genres = repository.findByNameLike(name);
+        log.info("Found {} genres with name: {}", genres.size(), name);
+        return genres.stream()
+                .map(mapper::toDto)
+                .toList();
+    }
+
+    @Override
     public List<GenreDto> findAll() {
         log.debug("Fetching all genres");
         List<Genre> genres = repository.findAll();

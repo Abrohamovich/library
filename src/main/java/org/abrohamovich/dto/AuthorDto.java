@@ -23,12 +23,6 @@ public class AuthorDto {
 
     @Override
     public String toString() {
-        return "AuthorDto{" +
-                "id=" + id +
-                ", fullName='" + fullName + '\'' +
-                ", dateOfBirth=" + dateOfBirth +
-                ", sex=" + sex +
-                ", nationality='" + nationality + '\'' +
-                '}';
+        return fullName + ", " + nationality;
     }
 }

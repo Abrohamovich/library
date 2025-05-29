@@ -79,24 +79,14 @@ class PatronRepositoryTest {
                 .description("Books that explore past events and historical figures.")
                 .build();
 
-        Book book1 = Book.builder()
-                .title("Some title 1").authors(Set.of(author1)).isbn("978-9-4146-4771-1")
-                .genres(Set.of(genre1)).language("english").categories(Set.of(category1, category2))
+        Book book1 = Book.builder().title("Some title 1").isbn("978-9-4146-4771-1").language("").numberOfPages(130)
+                .authors(Set.of(author1)).genres(Set.of(genre1)).categories(Set.of(category1, category2))
+                .publisher(publisher1).status(Status.AVAILABLE).format(Format.PAPERBACK).receiptDate(LocalDate.now())
                 .build();
-        Book book3 = Book.builder()
-                .title("Some title 3").authors(Set.of(author1)).isbn("978-0-7247-2925-8")
-                .genres(Set.of(genre3)).language("russian").categories(Set.of(category2))
+        Book book3 = Book.builder().title("Some title 3").isbn("978-0-7247-2925-8").language("").numberOfPages(130)
+                .authors(Set.of(author1, author2)).genres(Set.of(genre3)).categories(Set.of(category2))
+                .publisher(publisher2).status(Status.NOT_AVAILABLE).format(Format.PAPERBACK).receiptDate(LocalDate.now())
                 .build();
-
-        BookInstance bi1 = BookInstance.builder()
-                .book(book1).numberOfPages(120).receiptDate(LocalDate.of(2025, 1, 23))
-                .status(Status.AVAILABLE).publisher(publisher1).format(Format.HARDCOVER).build();
-        BookInstance bi2 = BookInstance.builder()
-                .book(book3).numberOfPages(134).receiptDate(LocalDate.of(2025, 2, 7))
-                .status(Status.AVAILABLE).publisher(publisher1).format(Format.PAPERBACK).build();
-        BookInstance bi3 = BookInstance.builder()
-                .book(book3).numberOfPages(176).receiptDate(LocalDate.of(2021, 10, 18))
-                .status(Status.CHECKED_OUT).publisher(publisher2).format(Format.HARDCOVER).build();
 
         try (EntityManager em = emf.createEntityManager()) {
             em.getTransaction().begin();
@@ -112,22 +102,19 @@ class PatronRepositoryTest {
             em.persist(category3);
             em.persist(book1);
             em.persist(book3);
-            em.persist(bi1);
-            em.persist(bi2);
-            em.persist(bi3);
             em.getTransaction().commit();
         }
 
         patron1 = Patron.builder().cardId("C1001").fullName("Alice Smith")
                 .email("alice.smith@example.com").phone("123-456-7890")
-                .address("123 Main St, Springfield").books(Set.of(bi1))
+                .address("123 Main St, Springfield").books(Set.of(book1))
                 .dateOfBirth(LocalDate.of(1990, 5, 1))
                 .registerDate(LocalDate.of(2024, 1, 15))
                 .build();
 
         patron2 = Patron.builder().cardId("C1002").fullName("Bob Johnson")
                 .email("bob.johnson@example.com").phone("987-654-3210")
-                .address("456 Oak Ave, Riverdale").books(Set.of(bi2, bi3))
+                .address("456 Oak Ave, Riverdale").books(Set.of(book3))
                 .dateOfBirth(LocalDate.of(1985, 11, 20))
                 .registerDate(LocalDate.of(2024, 3, 10))
                 .build();
@@ -207,19 +194,18 @@ class PatronRepositoryTest {
     }
 
     @Test
-    void findByBookInstanceId_ReturnsOptionalOfPatron() {
+    void findByBookId_ReturnsOptionalOfPatron() {
         persist();
 
-        Optional<Patron> res = repo.findByBookInstanceId(1);
-        Optional<Patron> res2 = repo.findByBookInstanceId(2);
-        Optional<Patron> res3 = repo.findByBookInstanceId(3);
+        Optional<Patron> res = repo.findByBookId(1);
+        Optional<Patron> res2 = repo.findByBookId(2);
+        Optional<Patron> res3 = repo.findByBookId(3);
 
         assertTrue(res.isPresent());
         assertTrue(res2.isPresent());
-        assertTrue(res3.isPresent());
+        assertTrue(res3.isEmpty());
 
         assertEquals(patron1, res.get());
-        assertEquals(res3.get(), res2.get());
     }
 
     @Test

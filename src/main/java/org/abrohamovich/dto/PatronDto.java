@@ -18,12 +18,11 @@ public class PatronDto {
     @NonNull
     private String fullName;
     @Builder.Default
-    private Set<BookInstanceDto> books = new HashSet<>();
+    private Set<BookDto> books = new HashSet<>();
     @NonNull
     private String email;
     @NonNull
     private String phone;
-    @NonNull
     private String address;
     @NonNull
     private LocalDate dateOfBirth;
@@ -32,16 +31,6 @@ public class PatronDto {
 
     @Override
     public String toString() {
-        return "PatronDto{" +
-                "id=" + id +
-                ", cardId='" + cardId + '\'' +
-                ", fullName='" + fullName + '\'' +
-                ", books=" + books +
-                ", email='" + email + '\'' +
-                ", phone='" + phone + '\'' +
-                ", address='" + address + '\'' +
-                ", dateOfBirth=" + dateOfBirth +
-                ", registerDate=" + registerDate +
-                '}';
+        return fullName + ", '" + cardId + "'";
     }
 }

@@ -74,6 +74,20 @@ public class CategoryServiceCRUD implements CategoryService {
     }
 
     @Override
+    public List<CategoryDto> findByNameLike(String name) throws IllegalArgumentException {
+        if (name.isBlank()) {
+            log.error("Invalid argument: blank name");
+            throw new IllegalArgumentException("Invalid argument: blank name");
+        }
+        log.debug("Searching for category with name: {}", name);
+        List<Category> category = repository.findByNameLike(name);
+        log.info("Found {} categories with name: {}", category.size(), name);
+        return category.stream()
+                .map(mapper::toDto)
+                .toList();
+    }
+
+    @Override
     public List<CategoryDto> findAll() {
         log.debug("Fetching all categories");
         List<Category> categories = repository.findAll();

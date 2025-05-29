@@ -1,12 +1,10 @@
 package org.abrohamovich.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.abrohamovich.dto.AuthorDto;
-import org.abrohamovich.dto.BookDto;
-import org.abrohamovich.dto.CategoryDto;
-import org.abrohamovich.dto.GenreDto;
+import org.abrohamovich.dto.*;
 import org.abrohamovich.entity.Book;
-import org.abrohamovich.exceptions.BookAlreadyExistException;
+import org.abrohamovich.entity.Format;
+import org.abrohamovich.entity.Status;
 import org.abrohamovich.exceptions.BookNotFoundException;
 import org.abrohamovich.exceptions.EntityException;
 import org.abrohamovich.mapper.BookMapper;
@@ -28,16 +26,12 @@ public class BookServiceCRUD implements BookService {
     }
 
     @Override
-    public BookDto save(BookDto bookDto) throws BookAlreadyExistException, EntityException, IllegalArgumentException {
+    public BookDto save(BookDto bookDto) throws EntityException, IllegalArgumentException {
         if (bookDto == null) {
             log.error("Invalid argument: null bookDto");
             throw new IllegalArgumentException("Invalid argument: null bookDto");
         }
         log.info("Attempting to save book with ISBN: {}", bookDto.getIsbn());
-        if (repository.findByIsbn(bookDto.getIsbn()).isPresent()) {
-            log.error("Book with ISBN {} already exists", bookDto.getIsbn());
-            throw new BookAlreadyExistException("Book with ISBN " + bookDto.getIsbn() + " already exists");
-        }
         Optional<Book> book = repository.save(mapper.toEntity(bookDto));
         if (book.isEmpty()) {
             log.error("Failed to save book with ISBN: {}", bookDto.getIsbn());
@@ -75,19 +69,17 @@ public class BookServiceCRUD implements BookService {
     }
 
     @Override
-    public BookDto findByIsbn(String isbn) throws BookNotFoundException, IllegalArgumentException {
+    public List<BookDto> findByIsbn(String isbn) throws IllegalArgumentException {
         if (isbn.isBlank()) {
             log.error("Invalid argument: blank ISBN");
             throw new IllegalArgumentException("Invalid argument: blank ISBN");
         }
-        log.info("Finding book by ISBN: {}", isbn);
-        Optional<Book> book = repository.findByIsbn(isbn);
-        if (book.isEmpty()) {
-            log.error("Book with ISBN {} not found", isbn);
-            throw new BookNotFoundException("Book with ISBN " + isbn + " not found");
-        }
-        log.info("Found book with ISBN: {}", isbn);
-        return mapper.toDto(book.get());
+        log.info("Finding books by ISBN: {}", isbn);
+        List<Book> books = repository.findByIsbn(isbn);
+        log.info("Found books with ISBN: {}", isbn);
+        return books.stream()
+                .map(mapper::toDto)
+                .toList();
     }
 
     @Override
@@ -130,6 +122,48 @@ public class BookServiceCRUD implements BookService {
         List<Book> books = repository.findByLanguage(language);
         log.info("Found {} books for language: {}", books.size(), language);
         return books.stream()
+                .map(mapper::toDto)
+                .toList();
+    }
+
+    @Override
+    public List<BookDto> findByPublisher(PublisherDto publisherDto) throws IllegalArgumentException {
+        if (publisherDto == null) {
+            log.error("Invalid argument: null publisherDto");
+            throw new IllegalArgumentException("Invalid argument: null publisherDto");
+        }
+        log.debug("Searching for book instances with publisher id: {}", publisherDto.getId());
+        List<Book> bookInstances = repository.findByPublisherId(publisherDto.getId());
+        log.info("Found {} book instances for publisher id: {}", bookInstances.size(), publisherDto.getId());
+        return bookInstances.stream()
+                .map(mapper::toDto)
+                .toList();
+    }
+
+    @Override
+    public List<BookDto> findByStatus(Status status) throws IllegalArgumentException {
+        if (status == null) {
+            log.error("Invalid argument: null status");
+            throw new IllegalArgumentException("Invalid argument: null status");
+        }
+        log.debug("Searching for book instances with status: {}", status);
+        List<Book> bookInstances = repository.findByStatus(status);
+        log.info("Found {} book instances with status: {}", bookInstances.size(), status);
+        return bookInstances.stream()
+                .map(mapper::toDto)
+                .toList();
+    }
+
+    @Override
+    public List<BookDto> findByFormat(Format format) throws IllegalArgumentException {
+        if (format == null) {
+            log.error("Invalid argument: null format");
+            throw new IllegalArgumentException("Invalid argument: null format");
+        }
+        log.debug("Searching for book instances with format: {}", format);
+        List<Book> bookInstances = repository.findByFormat(format);
+        log.info("Found {} book instances with format: {}", bookInstances.size(), format);
+        return bookInstances.stream()
                 .map(mapper::toDto)
                 .toList();
     }

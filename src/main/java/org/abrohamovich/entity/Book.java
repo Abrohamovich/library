@@ -3,6 +3,7 @@ package org.abrohamovich.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,25 +13,25 @@ import java.util.Set;
 @Table(name = "t_book")
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(of = {"id", "title", "isbn", "language"})
+@EqualsAndHashCode(exclude = {"authors", "genres", "categories", "publisher"})
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
     @Column(name = "title", nullable = false)
     private String title;
-
+    @Column(name = "isbn", nullable = false)
+    private String isbn;
+    @Column(name = "language", nullable = false)
+    private String language;
+    @Column(name = "number_of_pages", nullable = false)
+    private int numberOfPages;
     @ManyToMany
     @JoinTable(name = "t_book_author",
             joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "author_id"))
     @Builder.Default
     private Set<Author> authors = new HashSet<>();
-
-    @Column(name = "isbn", nullable = false, unique = true)
-    private String isbn;
-
     @ManyToMany
     @JoinTable(
             name = "t_book_genre",
@@ -39,9 +40,6 @@ public class Book {
     )
     @Builder.Default
     private Set<Genre> genres = new HashSet<>();
-
-    private String language;
-
     @ManyToMany
     @JoinTable(
             name = "t_book_category",
@@ -50,28 +48,13 @@ public class Book {
     )
     @Builder.Default
     private Set<Category> categories = new HashSet<>();
-
-    public void addAuthor(Author author) {
-        authors.add(author);
-    }
-
-    public void removeAuthor(Author author) {
-        authors.remove(author);
-    }
-
-    public void addGenre(Genre genre) {
-        genres.add(genre);
-    }
-
-    public void removeGenre(Genre genre) {
-        genres.remove(genre);
-    }
-
-    public void addCategory(Category category) {
-        categories.add(category);
-    }
-
-    public void removeCategory(Category category) {
-        categories.remove(category);
-    }
+    @ManyToOne(cascade = {CascadeType.MERGE})
+    @JoinColumn(name = "publisher_id")
+    private Publisher publisher;
+    @Enumerated(EnumType.STRING)
+    private Status status;
+    @Enumerated(EnumType.STRING)
+    private Format format;
+    @Column(name = "receipt_date", nullable = false)
+    private LocalDate receiptDate;
 }

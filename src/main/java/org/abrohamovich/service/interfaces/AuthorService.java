@@ -17,6 +17,8 @@ public interface AuthorService {
 
     List<AuthorDto> findByFullName(String fullName) throws IllegalArgumentException;
 
+    List<AuthorDto> findByFullNameLike(String fullName) throws IllegalArgumentException;
+
     List<AuthorDto> findAll();
 
     AuthorDto update(AuthorDto authorDto) throws AuthorNotFoundException, IllegalArgumentException;

@@ -6,7 +6,6 @@
 
         <class>org.abrohamovich.entity.Patron</class>
         <class>org.abrohamovich.entity.Book</class>
-        <class>org.abrohamovich.entity.BookInstance</class>
         <class>org.abrohamovich.entity.Author</class>
         <class>org.abrohamovich.entity.Category</class>
         <class>org.abrohamovich.entity.Genre</class>

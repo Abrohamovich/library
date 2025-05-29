@@ -73,6 +73,20 @@ public class PublisherServiceCRUD implements PublisherService {
     }
 
     @Override
+    public List<PublisherDto> findByNameLike(String name) throws IllegalArgumentException {
+        if (name.isBlank()) {
+            log.error("Invalid argument: blank name");
+            throw new IllegalArgumentException("Invalid argument: blank name");
+        }
+        log.debug("Searching for publisher with name: {}", name);
+        List<Publisher> publishers = repository.findByNameLike(name);
+        log.info("Found {} publishers with name: {}", publishers.size(), name);
+        return publishers.stream()
+                .map(mapper::toDto)
+                .toList();
+    }
+
+    @Override
     public PublisherDto findByEmail(String email) throws PublisherNotFoundException, IllegalArgumentException {
         if (email.isBlank()) {
             log.error("Invalid argument: blank email");

@@ -21,13 +21,6 @@ public class PublisherDto {
 
     @Override
     public String toString() {
-        return "PublisherDto{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", foundationDate=" + foundationDate +
-                ", address='" + address + '\'' +
-                ", email='" + email + '\'' +
-                ", website='" + website + '\'' +
-                '}';
+        return name;
     }
 }

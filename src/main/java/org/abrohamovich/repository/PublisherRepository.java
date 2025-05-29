@@ -27,10 +27,10 @@ public class PublisherRepository implements GenericRepo<Publisher, Long> {
             return Optional.ofNullable(entity);
         } catch (PersistenceException e) {
             rollbackTransaction(em);
-            log.error("Persistence error while saving publisher", e);
+            log.error("Persistence error while saving publisher: {}", e.getMessage());
         } catch (Exception e) {
             rollbackTransaction(em);
-            log.error("Unexpected error while saving publisher", e);
+            log.error("Unexpected error while saving publisher: {}", e.getMessage());
         } finally {
             em.close();
         }
@@ -42,9 +42,9 @@ public class PublisherRepository implements GenericRepo<Publisher, Long> {
         try (EntityManager em = emf.createEntityManager()) {
             return Optional.of(em.find(Publisher.class, id));
         } catch (PersistenceException e) {
-            log.error("Persistence error while finding publisher by id {}", id, e);
+            log.error("Persistence error while finding publisher by id {}: {}", id, e.getMessage());
         } catch (Exception e) {
-            log.error("Unexpected error while finding publisher by id {}", id, e);
+            log.error("Unexpected error while finding publisher by id {}: {}", id, e.getMessage());
         }
         return Optional.empty();
     }
@@ -58,11 +58,27 @@ public class PublisherRepository implements GenericRepo<Publisher, Long> {
 
             return Optional.of(query.getSingleResult());
         } catch (PersistenceException e) {
-            log.error("Persistence error while finding publisher by name {}", name, e);
+            log.error("Persistence error while finding publisher by name {}: {}", name, e.getMessage());
         } catch (Exception e) {
-            log.error("Unexpected error while finding publisher by name {}", name, e);
+            log.error("Unexpected error while finding publisher by name {}: {}", name, e.getMessage());
         }
         return Optional.empty();
+    }
+
+    public List<Publisher> findByNameLike(String name) {
+        try (EntityManager em = emf.createEntityManager()) {
+            TypedQuery<Publisher> query = em.createQuery(
+                    "SELECT s FROM Publisher s WHERE s.name ILIKE :name", Publisher.class);
+
+            query.setParameter("name", "%" + name + "%");
+
+            return query.getResultList();
+        } catch (PersistenceException e) {
+            log.error("Persistence error while finding publisher by name {}: {}", name, e.getMessage());
+        } catch (Exception e) {
+            log.error("Unexpected error while finding publisher by name {}: {}", name, e.getMessage());
+        }
+        return Collections.emptyList();
     }
 
     public Optional<Publisher> findByEmail(String email) {
@@ -74,9 +90,9 @@ public class PublisherRepository implements GenericRepo<Publisher, Long> {
 
             return Optional.of(query.getSingleResult());
         } catch (PersistenceException e) {
-            log.error("Persistence error while finding publisher by email {}", email, e);
+            log.error("Persistence error while finding publisher by email {}: {}", email, e.getMessage());
         } catch (Exception e) {
-            log.error("Unexpected error while finding publisher by email {}", email, e);
+            log.error("Unexpected error while finding publisher by email {}: {}", email, e.getMessage());
         }
         return Optional.empty();
     }
@@ -90,9 +106,9 @@ public class PublisherRepository implements GenericRepo<Publisher, Long> {
 
             return Optional.of(query.getSingleResult());
         } catch (PersistenceException e) {
-            log.error("Persistence error while finding publisher by website {}", website, e);
+            log.error("Persistence error while finding publisher by website {}: {}", website, e.getMessage());
         } catch (Exception e) {
-            log.error("Unexpected error while finding publisher by website {}", website, e);
+            log.error("Unexpected error while finding publisher by website {}: {}", website, e.getMessage());
         }
         return Optional.empty();
     }
@@ -106,9 +122,9 @@ public class PublisherRepository implements GenericRepo<Publisher, Long> {
 
             return Optional.of(query.getSingleResult());
         } catch (PersistenceException e) {
-            log.error("Persistence error while finding publisher by address {}", address, e);
+            log.error("Persistence error while finding publisher by address {}: {}", address, e.getMessage());
         } catch (Exception e) {
-            log.error("Unexpected error while finding publisher by address {}", address, e);
+            log.error("Unexpected error while finding publisher by address {}: {}", address, e.getMessage());
         }
         return Optional.empty();
     }
@@ -118,9 +134,9 @@ public class PublisherRepository implements GenericRepo<Publisher, Long> {
         try (EntityManager em = emf.createEntityManager()) {
             return em.createQuery("SELECT s FROM Publisher s", Publisher.class).getResultList();
         } catch (PersistenceException e) {
-            log.error("Persistence error while finding all publishers", e);
+            log.error("Persistence error while finding all publishers: {}", e.getMessage());
         } catch (Exception e) {
-            log.error("Unexpected error while finding all publishers", e);
+            log.error("Unexpected error while finding all publishers: {}", e.getMessage());
         }
         return Collections.emptyList();
     }
@@ -135,10 +151,10 @@ public class PublisherRepository implements GenericRepo<Publisher, Long> {
             return Optional.ofNullable(updated);
         } catch (PersistenceException e) {
             rollbackTransaction(em);
-            log.error("Persistence error while updating publisher with id {}", entity.getId(), e);
+            log.error("Persistence error while updating publisher with id {}: {}", entity.getId(), e.getMessage());
         } catch (Exception e) {
             rollbackTransaction(em);
-            log.error("Unexpected error while updating publisher with id {}", entity.getId(), e);
+            log.error("Unexpected error while updating publisher with id {}: {}", entity.getId(), e.getMessage());
         } finally {
             em.close();
         }
@@ -157,10 +173,10 @@ public class PublisherRepository implements GenericRepo<Publisher, Long> {
             em.getTransaction().commit();
         } catch (PersistenceException e) {
             rollbackTransaction(em);
-            log.error("Persistence error while deleting publisher with id {}", id, e);
+            log.error("Persistence error while deleting publisher with id {}: {}", id, e.getMessage());
         } catch (Exception e) {
             rollbackTransaction(em);
-            log.error("Unexpected error while deleting publisher with id {}", id, e);
+            log.error("Unexpected error while deleting publisher with id {}: {}", id, e.getMessage());
         } finally {
             em.close();
         }

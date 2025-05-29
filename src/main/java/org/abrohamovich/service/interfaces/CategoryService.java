@@ -18,6 +18,9 @@ public interface CategoryService {
     CategoryDto findByName(String name)
             throws CategoryNotFoundException, IllegalArgumentException;
 
+    List<CategoryDto> findByNameLike(String name) throws IllegalArgumentException;
+
+
     List<CategoryDto> findAll();
 
     CategoryDto update(CategoryDto categoryDto)

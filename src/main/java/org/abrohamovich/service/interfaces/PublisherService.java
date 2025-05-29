@@ -18,6 +18,8 @@ public interface PublisherService {
     PublisherDto findByName(String name)
             throws PublisherNotFoundException, IllegalArgumentException;
 
+    List<PublisherDto> findByNameLike(String name) throws IllegalArgumentException;
+
     PublisherDto findByEmail(String email)
             throws PublisherNotFoundException, IllegalArgumentException;
 

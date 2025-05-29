@@ -63,6 +63,21 @@ class BookRepositoryTest {
                 .description("Books that explore past events and historical figures.")
                 .build();
 
+        Publisher publisher1 = Publisher.builder()
+                .name("Penguin Random House")
+                .foundationDate(LocalDate.of(1927, 7, 1))
+                .address("1745 Broadway, New York, NY 10019, USA")
+                .email("contact@penguinrandomhouse.com")
+                .website("https://www.penguinrandomhouse.com")
+                .build();
+        Publisher publisher2 = Publisher.builder()
+                .name("HarperCollins")
+                .foundationDate(LocalDate.of(1989, 8, 1))
+                .address("195 Broadway, New York, NY 10007, USA")
+                .email("info@harpercollins.com")
+                .website("https://www.harpercollins.com")
+                .build();
+
         try (EntityManager em = emf.createEntityManager()) {
             em.getTransaction().begin();
             em.persist(author1);
@@ -73,21 +88,25 @@ class BookRepositoryTest {
             em.persist(category1);
             em.persist(category2);
             em.persist(category3);
+            em.persist(publisher1);
+            em.persist(publisher2);
             em.getTransaction().commit();
         }
 
-        book1 = Book.builder()
-                .title("Some title 1").authors(Set.of(author1)).isbn("978-9-4146-4771-1")
-                .genres(Set.of(genre1)).language("english").categories(Set.of(category1, category2))
+        book1 = Book.builder().title("Some title 1").isbn("978-9-4146-4771-1").language("english").numberOfPages(130)
+                .authors(Set.of(author1)).genres(Set.of(genre1)).categories(Set.of(category1, category2))
+                .publisher(publisher1).status(Status.AVAILABLE).format(Format.PAPERBACK).receiptDate(LocalDate.now())
                 .build();
-        book2 = Book.builder()
-                .title("Some title 2").authors(Set.of(author2)).isbn("978-0-9937-6855-2")
-                .genres(Set.of(genre1, genre2)).language("german").categories(Set.of(category3))
+        book2 = Book.builder().title("SSome title 2").isbn("978-0-9937-6855-2").language("russian").numberOfPages(130)
+                .authors(Set.of(author2)).genres(Set.of(genre1, genre2)).categories(Set.of(category3))
+                .publisher(publisher1).status(Status.CHECKED_OUT).format(Format.HARDCOVER).receiptDate(LocalDate.now())
                 .build();
-        book3 = Book.builder()
-                .title("Some title 3").authors(Set.of(author1, author2)).isbn("978-0-7247-2925-8")
-                .genres(Set.of(genre3)).language("russian").categories(Set.of(category2))
+
+        book3 = Book.builder().title("Some title 3").isbn("978-0-7247-2925-8").language("ukrainian").numberOfPages(130)
+                .authors(Set.of(author1, author2)).genres(Set.of(genre3)).categories(Set.of(category2))
+                .publisher(publisher2).status(Status.NOT_AVAILABLE).format(Format.PAPERBACK).receiptDate(LocalDate.now())
                 .build();
+
     }
 
     @AfterEach
@@ -149,13 +168,13 @@ class BookRepositoryTest {
     }
 
     @Test
-    void findByIsbn_ReturnsOptionalOfBook() {
+    void findByIsbn_ReturnsListOfBooks() {
         persistBooks();
 
-        Optional<Book> res = repo.findByIsbn("978-0-9937-6855-2");
+        List<Book> res = repo.findByIsbn("978-0-9937-6855-2");
 
-        assertTrue(res.isPresent());
-        assertEquals(book2, res.get());
+        assertEquals(1, res.size());
+        assertEquals(book2, res.getFirst());
     }
 
     @Test
@@ -174,6 +193,33 @@ class BookRepositoryTest {
         persistBooks();
 
         List<Book> res = repo.findByCategoryIds(List.of(3L));
+
+        assertEquals(book2, res.getFirst());
+    }
+
+    @Test
+    void findByPublisherId_ReturnsBookInstances() {
+        persistBooks();
+
+        List<Book> res = repo.findByPublisherId(2L);
+
+        assertEquals(book3, res.getFirst());
+    }
+
+    @Test
+    void findByStatus_ReturnsBookInstances() {
+        persistBooks();
+
+        List<Book> res = repo.findByStatus(Status.AVAILABLE);
+
+        assertEquals(book1, res.getFirst());
+    }
+
+    @Test
+    void findByFormat_ReturnsBookInstances() {
+        persistBooks();
+
+        List<Book> res = repo.findByFormat(Format.HARDCOVER);
 
         assertEquals(book2, res.getFirst());
     }

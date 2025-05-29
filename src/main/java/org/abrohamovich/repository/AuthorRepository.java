@@ -28,10 +28,10 @@ public class AuthorRepository implements GenericRepo<Author, Long> {
             return Optional.ofNullable(entity);
         } catch (PersistenceException e) {
             rollbackTransaction(em);
-            log.error("Persistence error while saving author", e);
+            log.error("Persistence error while saving author: {}", e.getMessage());
         } catch (Exception e) {
             rollbackTransaction(em);
-            log.error("Unexpected error while saving author", e);
+            log.error("Unexpected error while saving author: {}", e.getMessage());
         } finally {
             em.close();
         }
@@ -43,12 +43,42 @@ public class AuthorRepository implements GenericRepo<Author, Long> {
         try (EntityManager em = emf.createEntityManager()) {
             return Optional.ofNullable(em.find(Author.class, id));
         } catch (Exception e) {
-            log.error("Unexpected error while finding author by id {}", id, e);
+            log.error("Unexpected error while finding author by id {}: {}", id, e.getMessage());
         }
         return Optional.empty();
     }
 
+    public List<Author> findByIdIn(List<Long> ids) {
+        try (EntityManager em = emf.createEntityManager()) {
+            TypedQuery<Author> query = em.createQuery(
+                    "SELECT a FROM Author a WHERE a.id IN :ids",
+                    Author.class
+            );
+            query.setParameter("ids", ids);
+            return query.getResultList();
+        } catch (Exception e) {
+            log.error("Unexpected error while finding authors by ids {}: {}", ids, e.getMessage());
+        }
+        return Collections.emptyList();
+    }
+
     public List<Author> findByFullName(String fullName) {
+        try (EntityManager em = emf.createEntityManager()) {
+            TypedQuery<Author> query = em.createQuery(
+                    "SELECT a FROM Author a WHERE a.fullName = :fullName",
+                    Author.class
+            );
+            query.setParameter("fullName", fullName);
+            return query.getResultList();
+        } catch (PersistenceException e) {
+            log.error("Persistence error while finding authors by full name - {}: {}", fullName, e.getMessage());
+        } catch (Exception e) {
+            log.error("Unexpected error while finding authors by full name - {}: {}", fullName, e.getMessage());
+        }
+        return Collections.emptyList();
+    }
+
+    public List<Author> findByFullNameLike(String fullName) {
         try (EntityManager em = emf.createEntityManager()) {
             TypedQuery<Author> query = em.createQuery(
                     "SELECT a FROM Author a WHERE a.fullName ILIKE :fullName",
@@ -57,9 +87,9 @@ public class AuthorRepository implements GenericRepo<Author, Long> {
             query.setParameter("fullName", "%" + fullName + "%");
             return query.getResultList();
         } catch (PersistenceException e) {
-            log.error("Persistence error while finding authors by full name - {}", fullName, e);
+            log.error("Persistence error while finding authors by full name - {}: {}", fullName, e.getMessage());
         } catch (Exception e) {
-            log.error("Unexpected error while finding authors by full name - {}", fullName, e);
+            log.error("Unexpected error while finding authors by full name - {}: {}", fullName, e.getMessage());
         }
         return Collections.emptyList();
     }
@@ -73,9 +103,9 @@ public class AuthorRepository implements GenericRepo<Author, Long> {
             query.setParameter("sex", sex);
             return query.getResultList();
         } catch (PersistenceException e) {
-            log.error("Persistence error while finding authors by sex - {}", sex, e);
+            log.error("Persistence error while finding authors by sex - {}: {}", sex, e.getMessage());
         } catch (Exception e) {
-            log.error("Unexpected error while finding authors by sex - {}", sex, e);
+            log.error("Unexpected error while finding authors by sex - {}: {}", sex, e.getMessage());
         }
         return Collections.emptyList();
     }
@@ -85,9 +115,9 @@ public class AuthorRepository implements GenericRepo<Author, Long> {
         try (EntityManager em = emf.createEntityManager()) {
             return em.createQuery("SELECT a FROM Author a", Author.class).getResultList();
         } catch (PersistenceException e) {
-            log.error("Persistence error while finding all authors", e);
+            log.error("Persistence error while finding all authors: {}", e.getMessage());
         } catch (Exception e) {
-            log.error("Unexpected error while finding all authors", e);
+            log.error("Unexpected error while finding all authors: {}", e.getMessage());
         }
         return Collections.emptyList();
     }
@@ -102,10 +132,10 @@ public class AuthorRepository implements GenericRepo<Author, Long> {
             return Optional.ofNullable(updated);
         } catch (PersistenceException e) {
             rollbackTransaction(em);
-            log.error("Persistence error while updating author with id {}", entity.getId(), e);
+            log.error("Persistence error while updating author with id {}: {}", entity.getId(), e.getMessage());
         } catch (Exception e) {
             rollbackTransaction(em);
-            log.error("Unexpected error while updating author with id {}", entity.getId(), e);
+            log.error("Unexpected error while updating author with id {}: {}", entity.getId(), e.getMessage());
         } finally {
             em.close();
         }
@@ -124,10 +154,10 @@ public class AuthorRepository implements GenericRepo<Author, Long> {
             em.getTransaction().commit();
         } catch (PersistenceException e) {
             rollbackTransaction(em);
-            log.error("Persistence error while deleting author with id {}", id, e);
+            log.error("Persistence error while deleting author with id {}: {}", id, e.getMessage());
         } catch (Exception e) {
             rollbackTransaction(em);
-            log.error("Unexpected error while deleting author with id {}", id, e);
+            log.error("Unexpected error while deleting author with id {}: {}", id, e.getMessage());
         } finally {
             em.close();
         }
@@ -142,4 +172,5 @@ public class AuthorRepository implements GenericRepo<Author, Long> {
             }
         }
     }
+
 }

@@ -7,6 +7,8 @@ import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.abrohamovich.entity.Book;
+import org.abrohamovich.entity.Format;
+import org.abrohamovich.entity.Status;
 
 import java.util.Collections;
 import java.util.List;
@@ -27,10 +29,10 @@ public class BookRepository implements GenericRepo<Book, Long> {
             return Optional.ofNullable(entity);
         } catch (PersistenceException e) {
             rollbackTransaction(em);
-            log.error("Persistence error while saving book", e);
+            log.error("Persistence error while saving book: {}", e.getMessage());
         } catch (Exception e) {
             rollbackTransaction(em);
-            log.error("Unexpected error while saving book", e);
+            log.error("Unexpected error while saving book: {}", e.getMessage());
         } finally {
             em.close();
         }
@@ -42,25 +44,25 @@ public class BookRepository implements GenericRepo<Book, Long> {
         try (EntityManager em = emf.createEntityManager()) {
             return Optional.ofNullable(em.find(Book.class, id));
         } catch (PersistenceException e) {
-            log.error("Persistence error while finding book by id {}", id, e);
+            log.error("Persistence error while finding book by id {}: {}", id, e.getMessage());
         } catch (Exception e) {
-            log.error("Unexpected error while finding book by id {}", id, e);
+            log.error("Unexpected error while finding book by id {}: {}", id, e.getMessage());
         }
         return Optional.empty();
     }
 
-    public Optional<Book> findByIsbn(String isbn) {
+    public List<Book> findByIsbn(String isbn) {
         try (EntityManager em = emf.createEntityManager()) {
             TypedQuery<Book> query = em.createQuery(
                     "SELECT b FROM Book b WHERE b.isbn = :isbn", Book.class);
             query.setParameter("isbn", isbn);
-            return Optional.ofNullable(query.getSingleResult());
+            return query.getResultList();
         } catch (PersistenceException e) {
-            log.error("Persistence error while finding book by ISBN {}", isbn, e);
+            log.error("Persistence error while finding books by ISBN {}: {}", isbn, e.getMessage());
         } catch (Exception e) {
-            log.error("Unexpected error while finding book by ISBN {}", isbn, e);
+            log.error("Unexpected error while finding books by ISBN {}: {}", isbn, e.getMessage());
         }
-        return Optional.empty();
+        return Collections.emptyList();
     }
 
     public List<Book> findByAuthorIds(List<Long> authorIds) {
@@ -75,9 +77,9 @@ public class BookRepository implements GenericRepo<Book, Long> {
             query.setParameter("authorCount", (long) authorIds.size());
             return query.getResultList();
         } catch (PersistenceException e) {
-            log.error("Persistence error while finding books by author IDs {}", authorIds, e);
+            log.error("Persistence error while finding books by author IDs {}: {}", authorIds, e.getMessage());
         } catch (Exception e) {
-            log.error("Unexpected error while finding books by author IDs {}", authorIds, e);
+            log.error("Unexpected error while finding books by author IDs {}: {}", authorIds, e.getMessage());
         }
         return Collections.emptyList();
     }
@@ -94,9 +96,9 @@ public class BookRepository implements GenericRepo<Book, Long> {
             query.setParameter("genreCount", (long) genreIds.size());
             return query.getResultList();
         } catch (PersistenceException e) {
-            log.error("Persistence error while finding books by genre IDs {}", genreIds, e);
+            log.error("Persistence error while finding books by genre IDs {}: {}", genreIds, e.getMessage());
         } catch (Exception e) {
-            log.error("Unexpected error while finding books by genre IDs {}", genreIds, e);
+            log.error("Unexpected error while finding books by genre IDs {}: {}", genreIds, e.getMessage());
         }
         return Collections.emptyList();
     }
@@ -113,9 +115,9 @@ public class BookRepository implements GenericRepo<Book, Long> {
             query.setParameter("categoryCount", (long) categoryIds.size());
             return query.getResultList();
         } catch (PersistenceException e) {
-            log.error("Persistence error while finding books by category IDs {}", categoryIds, e);
+            log.error("Persistence error while finding books by category IDs {}: {}", categoryIds, e.getMessage());
         } catch (Exception e) {
-            log.error("Unexpected error while finding books by category IDs {}", categoryIds, e);
+            log.error("Unexpected error while finding books by category IDs {}: {}", categoryIds, e.getMessage());
         }
         return Collections.emptyList();
     }
@@ -127,9 +129,57 @@ public class BookRepository implements GenericRepo<Book, Long> {
             query.setParameter("language", language);
             return query.getResultList();
         } catch (PersistenceException e) {
-            log.error("Persistence error while finding books by language '{}'", language, e);
+            log.error("Persistence error while finding books by language '{}': {}", language, e.getMessage());
         } catch (Exception e) {
-            log.error("Unexpected error while finding books by language '{}'", language, e);
+            log.error("Unexpected error while finding books by language '{}': {}", language, e.getMessage());
+        }
+        return Collections.emptyList();
+    }
+
+    public List<Book> findByPublisherId(long publisherId) {
+        try (EntityManager em = emf.createEntityManager()) {
+            TypedQuery<Book> query = em.createQuery(
+                    "SELECT bi FROM Book bi WHERE bi.publisher.id = :publisherId", Book.class);
+
+            query.setParameter("publisherId", publisherId);
+
+            return query.getResultList();
+        } catch (PersistenceException e) {
+            log.error("Persistence error while finding book by publisherId {}: {}", publisherId, e.getMessage());
+        } catch (Exception e) {
+            log.error("Unexpected error while finding book by publisherId {}: {}", publisherId, e.getMessage());
+        }
+        return Collections.emptyList();
+    }
+
+    public List<Book> findByStatus(Status status) {
+        try (EntityManager em = emf.createEntityManager()) {
+            TypedQuery<Book> query = em.createQuery(
+                    "SELECT bi FROM Book bi WHERE bi.status = :status", Book.class);
+
+            query.setParameter("status", status);
+
+            return query.getResultList();
+        } catch (PersistenceException e) {
+            log.error("Persistence error while finding book by status {}: {}", status, e.getMessage());
+        } catch (Exception e) {
+            log.error("Unexpected error while finding book by status {}: {}", status, e.getMessage());
+        }
+        return Collections.emptyList();
+    }
+
+    public List<Book> findByFormat(Format format) {
+        try (EntityManager em = emf.createEntityManager()) {
+            TypedQuery<Book> query = em.createQuery(
+                    "SELECT bi FROM Book bi WHERE bi.format = :format", Book.class);
+
+            query.setParameter("format", format);
+
+            return query.getResultList();
+        } catch (PersistenceException e) {
+            log.error("Persistence error while finding book by format {}: {}", format, e.getMessage());
+        } catch (Exception e) {
+            log.error("Unexpected error while finding book by format {}: {}", format, e.getMessage());
         }
         return Collections.emptyList();
     }
@@ -140,9 +190,9 @@ public class BookRepository implements GenericRepo<Book, Long> {
             TypedQuery<Book> query = em.createQuery("SELECT b FROM Book b", Book.class);
             return query.getResultList();
         } catch (PersistenceException e) {
-            log.error("Persistence error while finding all books", e);
+            log.error("Persistence error while finding all books: {}", e.getMessage());
         } catch (Exception e) {
-            log.error("Unexpected error while finding all books", e);
+            log.error("Unexpected error while finding all books: {}", e.getMessage());
         }
         return Collections.emptyList();
     }
@@ -157,10 +207,10 @@ public class BookRepository implements GenericRepo<Book, Long> {
             return Optional.ofNullable(updated);
         } catch (PersistenceException e) {
             rollbackTransaction(em);
-            log.error("Persistence error while updating entity with id {}", entity.getId(), e);
+            log.error("Persistence error while updating entity with id {}: {}", entity.getId(), e.getMessage());
         } catch (Exception e) {
             rollbackTransaction(em);
-            log.error("Unexpected error while updating entity with id {}", entity.getId(), e);
+            log.error("Unexpected error while updating entity with id {}: {}", entity.getId(), e.getMessage());
         } finally {
             em.close();
         }
@@ -179,10 +229,10 @@ public class BookRepository implements GenericRepo<Book, Long> {
             em.getTransaction().commit();
         } catch (PersistenceException e) {
             rollbackTransaction(em);
-            log.error("Persistence error while deleting book with id {}", id, e);
+            log.error("Persistence error while deleting book with id {}: {}", id, e.getMessage());
         } catch (Exception e) {
             rollbackTransaction(em);
-            log.error("Unexpected error while deleting book with id {}", id, e);
+            log.error("Unexpected error while deleting book with id {}: {}", id, e.getMessage());
         } finally {
             em.close();
         }
@@ -193,7 +243,7 @@ public class BookRepository implements GenericRepo<Book, Long> {
             try {
                 em.getTransaction().rollback();
             } catch (Exception ex) {
-                log.error("Failed to rollback transaction", ex);
+                log.error("Failed to rollback transaction: {}", ex);
             }
         }
     }

@@ -1,7 +1,7 @@
 package org.abrohamovich.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.abrohamovich.dto.BookInstanceDto;
+import org.abrohamovich.dto.BookDto;
 import org.abrohamovich.dto.PatronDto;
 import org.abrohamovich.entity.Patron;
 import org.abrohamovich.exceptions.EntityException;
@@ -82,21 +82,21 @@ public class PatronServiceCRUD implements PatronService {
     }
 
     @Override
-    public PatronDto findByBookInstance(BookInstanceDto bookInstanceDto) throws PatronNotFoundException, IllegalArgumentException {
-        if (bookInstanceDto == null) {
-            log.error("Invalid argument: null bookInstanceDto");
-            throw new IllegalArgumentException("Invalid argument: null bookInstanceDto");
+    public PatronDto findByBookInstance(BookDto bookDto) throws PatronNotFoundException, IllegalArgumentException {
+        if (bookDto == null) {
+            log.error("Invalid argument: null bookDto");
+            throw new IllegalArgumentException("Invalid argument: null bookDto");
         }
 
-        log.info("Finding patron by book instance ID: {}", bookInstanceDto.getId());
-        Optional<Patron> patron = repository.findByBookInstanceId(bookInstanceDto.getId());
+        log.info("Finding patron by book instance ID: {}", bookDto.getId());
+        Optional<Patron> patron = repository.findByBookId(bookDto.getId());
 
         if (patron.isEmpty()) {
-            log.error("Patron with book instance ID {} not found", bookInstanceDto.getId());
-            throw new PatronNotFoundException("Patron with card id" + bookInstanceDto.getId() + " not found");
+            log.error("Patron with book instance ID {} not found", bookDto.getId());
+            throw new PatronNotFoundException("Patron with card id" + bookDto.getId() + " not found");
         }
 
-        log.info("Found patron for book instance ID: {}", bookInstanceDto.getId());
+        log.info("Found patron for book instance ID: {}", bookDto.getId());
         return mapper.toDto(patron.get());
     }
 

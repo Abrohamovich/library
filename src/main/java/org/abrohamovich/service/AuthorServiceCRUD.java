@@ -81,6 +81,20 @@ public class AuthorServiceCRUD implements AuthorService {
     }
 
     @Override
+    public List<AuthorDto> findByFullNameLike(String fullName) throws IllegalArgumentException {
+        if (fullName.isBlank()) {
+            log.error("Invalid argument: blank fullName");
+            throw new IllegalArgumentException("Invalid argument: blank fullName");
+        }
+        log.debug("Searching for authors with full name: {}", fullName);
+        List<Author> authors = repository.findByFullNameLike(fullName);
+        log.info("Found {} authors with full name: {}", authors.size(), fullName);
+        return authors.stream()
+                .map(mapper::toDto)
+                .toList();
+    }
+
+    @Override
     public List<AuthorDto> findAll() {
         log.debug("Fetching all authors");
         List<Author> authors = repository.findAll();

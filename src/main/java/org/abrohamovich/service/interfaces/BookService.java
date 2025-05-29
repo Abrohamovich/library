@@ -1,10 +1,8 @@
 package org.abrohamovich.service.interfaces;
 
-import org.abrohamovich.dto.AuthorDto;
-import org.abrohamovich.dto.BookDto;
-import org.abrohamovich.dto.CategoryDto;
-import org.abrohamovich.dto.GenreDto;
-import org.abrohamovich.exceptions.BookAlreadyExistException;
+import org.abrohamovich.dto.*;
+import org.abrohamovich.entity.Format;
+import org.abrohamovich.entity.Status;
 import org.abrohamovich.exceptions.BookNotFoundException;
 import org.abrohamovich.exceptions.EntityException;
 
@@ -13,7 +11,7 @@ import java.util.List;
 public interface BookService {
 
     BookDto save(BookDto bookDto)
-            throws BookAlreadyExistException, EntityException, IllegalArgumentException;
+            throws EntityException, IllegalArgumentException;
 
     BookDto findById(long id)
             throws BookNotFoundException;
@@ -21,8 +19,8 @@ public interface BookService {
     List<BookDto> findByAuthors(List<AuthorDto> authorDtos)
             throws IllegalArgumentException;
 
-    BookDto findByIsbn(String isbn)
-            throws BookNotFoundException, IllegalArgumentException;
+    List<BookDto> findByIsbn(String isbn)
+            throws IllegalArgumentException;
 
     List<BookDto> findByGenres(List<GenreDto> genreDtos)
             throws IllegalArgumentException;
@@ -31,6 +29,15 @@ public interface BookService {
             throws IllegalArgumentException;
 
     List<BookDto> findByLanguage(String language)
+            throws IllegalArgumentException;
+
+    List<BookDto> findByPublisher(PublisherDto publisherDto)
+            throws IllegalArgumentException;
+
+    List<BookDto> findByStatus(Status status)
+            throws IllegalArgumentException;
+
+    List<BookDto> findByFormat(Format format)
             throws IllegalArgumentException;
 
     List<BookDto> findAll();

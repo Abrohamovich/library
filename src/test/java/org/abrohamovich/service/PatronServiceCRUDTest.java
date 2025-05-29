@@ -1,7 +1,6 @@
 package org.abrohamovich.service;
 
 import org.abrohamovich.dto.BookDto;
-import org.abrohamovich.dto.BookInstanceDto;
 import org.abrohamovich.dto.PatronDto;
 import org.abrohamovich.dto.PublisherDto;
 import org.abrohamovich.entity.Format;
@@ -37,7 +36,7 @@ public class PatronServiceCRUDTest {
     private PatronMapper patronMapper;
     private Patron patron;
     private PatronDto patronDto;
-    private BookInstanceDto bookInstanceDto;
+    private BookDto bookDto;
 
     @BeforeEach
     void setUp() {
@@ -53,13 +52,10 @@ public class PatronServiceCRUDTest {
                 .address("address").books(Set.of())
                 .dateOfBirth(LocalDate.now()).registerDate(LocalDate.now())
                 .build();
-        bookInstanceDto = BookInstanceDto.builder().id(1L)
-                .book(mock(BookDto.class))
-                .publisher(mock(PublisherDto.class))
-                .numberOfPages(130)
-                .receiptDate(LocalDate.now())
-                .status(Status.AVAILABLE)
-                .format(Format.PAPERBACK)
+        bookDto = BookDto.builder()
+                .id(1L).title("Book One").isbn("").language("English").numberOfPages(130)
+                .authors(Set.of()).genres(Set.of()).categories(Set.of()).publisher(mock(PublisherDto.class))
+                .status(Status.AVAILABLE).format(Format.HARDCOVER).receiptDate(LocalDate.now())
                 .build();
     }
 
@@ -159,14 +155,14 @@ public class PatronServiceCRUDTest {
 
     @Test
     void findByBookInstance_ReturnsPatronDto() {
-        when(patronRepository.findByBookInstanceId(1L)).thenReturn(Optional.of(patron));
+        when(patronRepository.findByBookId(1L)).thenReturn(Optional.of(patron));
         when(patronMapper.toDto(patron)).thenReturn(patronDto);
 
-        PatronDto result = patronServiceCRUD.findByBookInstance(bookInstanceDto);
+        PatronDto result = patronServiceCRUD.findByBookInstance(bookDto);
 
         assertNotNull(result);
         assertEquals(patronDto, result);
-        verify(patronRepository).findByBookInstanceId(1L);
+        verify(patronRepository).findByBookId(1L);
         verify(patronMapper).toDto(patron);
     }
 
@@ -174,16 +170,16 @@ public class PatronServiceCRUDTest {
     void findByBookInstance_ThrowsIllegalArgumentException() {
         assertThrows(IllegalArgumentException.class,
                 () -> patronServiceCRUD.findByBookInstance(null));
-        verify(patronRepository, never()).findByBookInstanceId(anyLong());
+        verify(patronRepository, never()).findByBookId(anyLong());
     }
 
     @Test
     void findByBookInstance_ThrowsPatronNotFoundException() {
-        when(patronRepository.findByBookInstanceId(1L)).thenReturn(Optional.empty());
+        when(patronRepository.findByBookId(1L)).thenReturn(Optional.empty());
 
         assertThrows(PatronNotFoundException.class,
-                () -> patronServiceCRUD.findByBookInstance(bookInstanceDto));
-        verify(patronRepository).findByBookInstanceId(1L);
+                () -> patronServiceCRUD.findByBookInstance(bookDto));
+        verify(patronRepository).findByBookId(1L);
     }
 
     @Test

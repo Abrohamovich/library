@@ -1,6 +1,6 @@
 package org.abrohamovich.service.interfaces;
 
-import org.abrohamovich.dto.BookInstanceDto;
+import org.abrohamovich.dto.BookDto;
 import org.abrohamovich.dto.PatronDto;
 import org.abrohamovich.exceptions.EntityException;
 import org.abrohamovich.exceptions.PatronAlreadyExistException;
@@ -19,7 +19,7 @@ public interface PatronService {
     PatronDto findByCardId(String cardId)
             throws PatronNotFoundException, IllegalArgumentException;
 
-    PatronDto findByBookInstance(BookInstanceDto bookInstanceDto)
+    PatronDto findByBookInstance(BookDto bookDto)
             throws PatronNotFoundException, IllegalArgumentException;
 
     List<PatronDto> findByFullName(String fullName)
