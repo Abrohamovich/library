@@ -22,12 +22,7 @@ public class Patron {
     private String cardId;
     @Column(name = "full_name", nullable = false)
     private String fullName;
-    @OneToMany
-    @JoinTable(
-            name = "t_patron_book",
-            joinColumns = @JoinColumn(name = "patron_id"),
-            inverseJoinColumns = @JoinColumn(name = "book_id")
-    )
+    @OneToMany(mappedBy = "patron", cascade = CascadeType.MERGE)
     @Builder.Default
     private Set<Book> books = new HashSet<>();
     @Column(name = "email", nullable = false, unique = true)

@@ -26,6 +26,9 @@ public class Book {
     private String language;
     @Column(name = "number_of_pages", nullable = false)
     private int numberOfPages;
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    @JoinColumn(name = "patron_id", unique = true)
+    private Patron patron;
     @ManyToMany
     @JoinTable(name = "t_book_author",
             joinColumns = @JoinColumn(name = "book_id"),

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.abrohamovich.controller.MainController"
+            xmlns="http://javafx.com/javafx/21"
+            stylesheets="@style.css">
+    <top>
+        <Label text="Library Management System" BorderPane.alignment="CENTER" styleClass="header">
+            <padding>
+                <Insets top="30.0" bottom="30.0"/>
+            </padding>
+        </Label>
+    </top>
+    <center>
+        <VBox alignment="CENTER" spacing="30.0">
+            <padding>
+                <Insets left="50.0" right="50.0" top="30.0" bottom="30.0"/>
+            </padding>
+
+            <HBox alignment="CENTER" spacing="80.0">
+                <VBox alignment="TOP_CENTER" spacing="10.0">
+                    <Label text="Add New" styleClass="subheader"/>
+                    <Button onMouseClicked="#goToAddBookScene" text="New Book"/>
+                    <Button onMouseClicked="#goToAddPatronScene" text="New Patron"/>
+                </VBox>
+
+                <VBox alignment="TOP_CENTER" spacing="10.0">
+                    <Label text="Manage Entities" styleClass="subheader"/>
+                    <Button onMouseClicked="#goToManageBooksScene" text="Books"/>
+                    <Button onMouseClicked="#goToManageAuthorsScene" text="Authors"/>
+                    <Button onMouseClicked="#goToManageGenresScene" text="Genres"/>
+                    <Button onMouseClicked="#goToManageCategoriesScene" text="Categories"/>
+                    <Button onMouseClicked="#goToManagePublishersScene" text="Publishers"/>
+                    <Button onMouseClicked="#goToManagePatronsScene" text="Patrons"/>
+                </VBox>
+
+                <VBox alignment="TOP_CENTER" spacing="10.0">
+                    <Label text="View Existing" styleClass="subheader"/>
+                    <Button onMouseClicked="#goToViewBooksScene" text="View Books"/>
+                    <Button onMouseClicked="#goToViewPatronsScene" text="View Patrons"/>
+                </VBox>
+
+                <VBox alignment="TOP_CENTER" spacing="10.0">
+                    <Label text="Circulation" styleClass="subheader"/>
+                    <Button onMouseClicked="#goToLendReturnScene" text="Lend/Return Book"/>
+                </VBox>
+            </HBox>
+        </VBox>
+    </center>
+    <bottom>
+        <VBox alignment="CENTER" spacing="5.0">
+            <padding>
+                <Insets top="20.0" bottom="20.0"/>
+            </padding>
+            <Label text="Version 1.0.0 | © 2025 Abrohamovich" styleClass="footer"/>
+        </VBox>
+    </bottom>
+</BorderPane>

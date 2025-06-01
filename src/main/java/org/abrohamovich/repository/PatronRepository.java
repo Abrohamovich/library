@@ -68,9 +68,7 @@ public class PatronRepository implements GenericRepo<Patron, Long> {
     public Optional<Patron> findByBookId(long bookId) {
         try (EntityManager em = emf.createEntityManager()) {
             TypedQuery<Patron> query = em.createQuery(
-                    "SELECT p FROM Patron p WHERE EXISTS (" +
-                            "SELECT 1 FROM p.books bi WHERE bi.id = :bookId" +
-                            ")", Patron.class);
+                    "SELECT b.patron FROM Book b WHERE b.id = :bookId", Patron.class);
 
             query.setParameter("bookId", bookId);
 

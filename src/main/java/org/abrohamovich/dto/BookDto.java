@@ -23,6 +23,7 @@ public class BookDto {
     @NonNull
     private String language;
     private int numberOfPages;
+    private PatronDto patron;
     @Builder.Default
     private Set<AuthorDto> authors = new HashSet<>();
     @Builder.Default

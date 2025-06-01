@@ -21,7 +21,7 @@
 
             <property name="eclipselink.logging.level.sql" value="FINE"/>
             <property name="eclipselink.logging.parameters" value="true"/>
-            <property name="hibernate.hbm2ddl.auto" value="create"/>
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
             <property name="hibernate.jdbc.time_zone" value="UTC"/>
         </properties>
     </persistence-unit>

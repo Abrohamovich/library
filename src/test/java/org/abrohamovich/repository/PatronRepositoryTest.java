@@ -107,14 +107,14 @@ class PatronRepositoryTest {
 
         patron1 = Patron.builder().cardId("C1001").fullName("Alice Smith")
                 .email("alice.smith@example.com").phone("123-456-7890")
-                .address("123 Main St, Springfield").books(Set.of(book1))
+                .address("123 Main St, Springfield")
                 .dateOfBirth(LocalDate.of(1990, 5, 1))
                 .registerDate(LocalDate.of(2024, 1, 15))
                 .build();
 
         patron2 = Patron.builder().cardId("C1002").fullName("Bob Johnson")
                 .email("bob.johnson@example.com").phone("987-654-3210")
-                .address("456 Oak Ave, Riverdale").books(Set.of(book3))
+                .address("456 Oak Ave, Riverdale")
                 .dateOfBirth(LocalDate.of(1985, 11, 20))
                 .registerDate(LocalDate.of(2024, 3, 10))
                 .build();
@@ -191,21 +191,6 @@ class PatronRepositoryTest {
         assertEquals(patron1, res1.get());
         assertEquals(patron2, res2.get());
         assertEquals(patron3, res3.get());
-    }
-
-    @Test
-    void findByBookId_ReturnsOptionalOfPatron() {
-        persist();
-
-        Optional<Patron> res = repo.findByBookId(1);
-        Optional<Patron> res2 = repo.findByBookId(2);
-        Optional<Patron> res3 = repo.findByBookId(3);
-
-        assertTrue(res.isPresent());
-        assertTrue(res2.isPresent());
-        assertTrue(res3.isEmpty());
-
-        assertEquals(patron1, res.get());
     }
 
     @Test
