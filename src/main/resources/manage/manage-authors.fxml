@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="737.0" prefWidth="849.0" stylesheets="@/style.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.abrohamovich.controller.manage.ManageAuthorController">
+
+    <VBox alignment="TOP_CENTER" layoutX="8.0" layoutY="10.0" prefHeight="480.0" prefWidth="682.0" spacing="15.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+        <AnchorPane prefHeight="70.0" prefWidth="680.0">
+            <children>
+                <Label layoutX="71.0" layoutY="1.0" prefHeight="43.0" prefWidth="219.0" styleClass="header" text="Manage Authors" />
+                <Button alignment="CENTER_RIGHT" layoutX="586.0" layoutY="3.0" onMouseClicked="#returnToMainMenu" prefHeight="43.0" prefWidth="80.0" styleClass="return" text="Return" textAlignment="CENTER" />
+            </children>
+        </AnchorPane>
+        <HBox alignment="CENTER_LEFT" spacing="10.0">
+            <Label text="Filter by Name:" />
+            <TextField fx:id="filterTextField" onKeyReleased="#filterAuthors" promptText="Enter author full name..." HBox.hgrow="ALWAYS" />
+        </HBox>
+
+        <ListView fx:id="authorListView" prefHeight="378.0" prefWidth="672.0" VBox.vgrow="ALWAYS" />
+
+        <VBox fx:id="editPanel" managed="false" spacing="10.0" visible="false">
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            </padding>
+            <Label styleClass="subheader" text="Edit Author" />
+            <GridPane hgap="10.0" vgap="10.0" minHeight="210.0">
+                <columnConstraints>
+                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="150.0" minWidth="10.0" prefWidth="100.0" />
+                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="400.0" minWidth="10.0" prefWidth="300.0" />
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                </rowConstraints>
+                <children>
+                    <Label text="Full name:" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+                    <TextField fx:id="fullNameField" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+
+                    <Label text="Date of birth:" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+                    <DatePicker fx:id="dateOfBirthPicker" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+
+                    <Label text="Sex:" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+                    <ComboBox fx:id="sexComboBox" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+
+                    <Label text="Nationality:" GridPane.rowIndex="3" GridPane.columnIndex="0" />
+                    <TextField fx:id="nationalityField" GridPane.rowIndex="3" GridPane.columnIndex="1" />
+                </children>
+            </GridPane>
+            <HBox alignment="CENTER_RIGHT" spacing="10.0">
+                <Button onAction="#saveAuthor" text="Save" />
+                <Button onAction="#cancelEdit" styleClass="cancel" text="Cancel" />
+            </HBox>
+        </VBox>
+    </VBox>
+</AnchorPane>

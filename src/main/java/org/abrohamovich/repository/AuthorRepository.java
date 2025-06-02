@@ -94,6 +94,22 @@ public class AuthorRepository implements GenericRepo<Author, Long> {
         return Collections.emptyList();
     }
 
+    public List<Author> findByBookId (long bookId) {
+        try (EntityManager em = emf.createEntityManager()) {
+            TypedQuery<Author> query = em.createQuery(
+                    "SELECT a FROM Author a JOIN Book b ON b.id = :bookId AND a MEMBER OF b.authors",
+                    Author.class
+            );
+            query.setParameter("bookId", bookId);
+            return query.getResultList();
+        } catch (PersistenceException e) {
+            log.error("Persistence error while finding authors by book id - {}: {}", bookId, e.getMessage());
+        } catch (Exception e) {
+            log.error("Unexpected error while finding authors by book id - {}: {}", bookId, e.getMessage());
+        }
+        return Collections.emptyList();
+    }
+
     public List<Author> findBySex(Sex sex) {
         try (EntityManager em = emf.createEntityManager()) {
             TypedQuery<Author> query = em.createQuery(

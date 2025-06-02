@@ -13,6 +13,7 @@ import org.abrohamovich.service.interfaces.BookService;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class BookServiceCRUD implements BookService {
@@ -51,6 +52,16 @@ public class BookServiceCRUD implements BookService {
         }
         log.info("Found book with ID: {}", id);
         return mapper.toDto(book.get());
+    }
+
+    @Override
+    public List<BookDto> findByTitle(String title) {
+        log.debug("Searching for books with title: {}", title);
+        List<Book> books = repository.findByTitle(title);
+        log.info("Found {} books for title: {}", books.size(), title);
+        return books.stream()
+                .map(mapper::toDto)
+                .toList();
     }
 
     @Override
@@ -173,6 +184,7 @@ public class BookServiceCRUD implements BookService {
         log.info("Finding all books");
         List<Book> books = repository.findAll();
         log.info("Found {} books", books.size());
+
         return books.stream()
                 .map(mapper::toDto)
                 .toList();

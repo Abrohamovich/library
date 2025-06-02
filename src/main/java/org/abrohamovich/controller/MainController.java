@@ -113,7 +113,39 @@ public class MainController {
     }
 
     public void goToManageBooksScene(MouseEvent mouseEvent) {
+        try {
+            EntityManagerFactory emf = EntityManagerFactoryProvider.getEntityManagerFactory();
+            AuthorService authorService = new AuthorServiceCRUD(new AuthorRepository(emf), AuthorMapper.INSTANCE);
+            GenreService genreService = new GenreServiceCRUD(new GenreRepository(emf), GenreMapper.INSTANCE);
+            CategoryService categoryService = new CategoryServiceCRUD(new CategoryRepository(emf), CategoryMapper.INSTANCE);
+            PublisherService publisherService = new PublisherServiceCRUD(new PublisherRepository(emf), PublisherMapper.INSTANCE);
+            BookService bookService = new BookServiceCRUD(new BookRepository(emf), BookMapper.INSTANCE);
 
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/manage/manage-books.fxml"));
+
+            loader.setControllerFactory(controlClass -> {
+                if (controlClass == ManageBookController.class) {
+                    return new ManageBookController(bookService, authorService, genreService, categoryService, publisherService);
+                }
+                try {
+                    return controlClass.getDeclaredConstructor().newInstance();
+                } catch (Exception e) {
+                    throw new RuntimeException("Could not create controller", e);
+                }
+            });
+
+            Parent root = loader.load();
+
+            if (primaryStage != null) {
+                primaryStage.setScene(new Scene(root));
+                primaryStage.setTitle("Library Application - Add Books");
+                primaryStage.show();
+            } else {
+                log.error("Primary stage is null");
+            }
+        } catch (IOException e) {
+            log.error("Failed to load scene: {}", e.getMessage());
+        }
     }
 
     public void goToManageAuthorsScene(MouseEvent mouseEvent) {
@@ -125,8 +157,8 @@ public class MainController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/manage/manage-authors.fxml"));
 
             loader.setControllerFactory(controlClass -> {
-                if (controlClass == ManageAuthorsController.class) {
-                    return new ManageAuthorsController(authorService);
+                if (controlClass == ManageAuthorController.class) {
+                    return new ManageAuthorController(authorService);
                 }
                 try {
                     return controlClass.getDeclaredConstructor().newInstance();
@@ -288,5 +320,4 @@ public class MainController {
 
     public void goToLendReturnScene(MouseEvent mouseEvent) {
     }
-
 }

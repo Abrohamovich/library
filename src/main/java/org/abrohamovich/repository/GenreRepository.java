@@ -6,6 +6,7 @@ import jakarta.persistence.PersistenceException;
 import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.abrohamovich.entity.Category;
 import org.abrohamovich.entity.Genre;
 
 import java.util.Collections;
@@ -77,6 +78,22 @@ public class GenreRepository implements GenericRepo<Genre, Long> {
             log.error("Persistence error while finding genre by name - {}: {}", name, e.getMessage());
         } catch (Exception e) {
             log.error("Unexpected error while finding genre by name - {}: {}", name, e.getMessage());
+        }
+        return Collections.emptyList();
+    }
+
+    public List<Genre> findByBookId(long bookId) {
+        try (EntityManager em = emf.createEntityManager()) {
+            TypedQuery<Genre> query = em.createQuery(
+                    "SELECT g FROM Genre g JOIN Book b on b.id = :bookId AND g MEMBER OF b.genres", Genre.class);
+
+            query.setParameter("bookId", bookId);
+
+            return query.getResultList();
+        } catch (PersistenceException e) {
+            log.error("Persistence error while finding genres by book id - {}: {}", bookId, e.getMessage());
+        } catch (Exception e) {
+            log.error("Unexpected error while finding genres by book id - {}: {}", bookId, e.getMessage());
         }
         return Collections.emptyList();
     }

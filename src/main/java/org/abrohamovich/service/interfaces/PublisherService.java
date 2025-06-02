@@ -1,5 +1,6 @@
 package org.abrohamovich.service.interfaces;
 
+import org.abrohamovich.dto.BookDto;
 import org.abrohamovich.dto.PublisherDto;
 import org.abrohamovich.exceptions.EntityException;
 import org.abrohamovich.exceptions.PublisherAlreadyExistException;
@@ -28,6 +29,8 @@ public interface PublisherService {
 
     PublisherDto findByAddress(String address)
             throws PublisherNotFoundException, IllegalArgumentException;
+
+    PublisherDto findByBook(BookDto bookDto);
 
     List<PublisherDto> findAll();
 

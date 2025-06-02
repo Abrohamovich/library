@@ -1,7 +1,9 @@
 package org.abrohamovich.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.abrohamovich.dto.BookDto;
 import org.abrohamovich.dto.CategoryDto;
+import org.abrohamovich.entity.Author;
 import org.abrohamovich.entity.Category;
 import org.abrohamovich.exceptions.CategoryAlreadyExistException;
 import org.abrohamovich.exceptions.CategoryNotFoundException;
@@ -83,6 +85,16 @@ public class CategoryServiceCRUD implements CategoryService {
         List<Category> category = repository.findByNameLike(name);
         log.info("Found {} categories with name: {}", category.size(), name);
         return category.stream()
+                .map(mapper::toDto)
+                .toList();
+    }
+
+    @Override
+    public List<CategoryDto> findByBook(BookDto bookDto) {
+        log.debug("Searching for categories with book title: {}", bookDto.getTitle());
+        List<Category> categories = repository.findByBookId(bookDto.getId());
+        log.info("Found {} categories with book title: {}", categories.size(), bookDto.getTitle());
+        return categories.stream()
                 .map(mapper::toDto)
                 .toList();
     }

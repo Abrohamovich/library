@@ -13,7 +13,8 @@ import java.util.Set;
 @Table(name = "t_book")
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(exclude = {"authors", "genres", "categories", "publisher"})
+@EqualsAndHashCode(exclude = {"authors", "genres", "categories", "publisher", "patron"})
+@ToString(of = {"title"})
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,13 +30,13 @@ public class Book {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "patron_id", unique = true)
     private Patron patron;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "t_book_author",
             joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "author_id"))
     @Builder.Default
     private Set<Author> authors = new HashSet<>();
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "t_book_genre",
             joinColumns = @JoinColumn(name = "book_id"),
@@ -43,7 +44,7 @@ public class Book {
     )
     @Builder.Default
     private Set<Genre> genres = new HashSet<>();
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "t_book_category",
             joinColumns = @JoinColumn(name = "book_id"),
@@ -51,7 +52,7 @@ public class Book {
     )
     @Builder.Default
     private Set<Category> categories = new HashSet<>();
-    @ManyToOne(cascade = {CascadeType.MERGE})
+    @ManyToOne(cascade = {CascadeType.MERGE}, fetch = FetchType.LAZY)
     @JoinColumn(name = "publisher_id")
     private Publisher publisher;
     @Enumerated(EnumType.STRING)

@@ -14,6 +14,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(exclude = {"books"})
+@ToString(exclude = "books")
 public class Patron {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +23,7 @@ public class Patron {
     private String cardId;
     @Column(name = "full_name", nullable = false)
     private String fullName;
-    @OneToMany(mappedBy = "patron", cascade = CascadeType.MERGE)
+    @OneToMany(mappedBy = "patron", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @Builder.Default
     private Set<Book> books = new HashSet<>();
     @Column(name = "email", nullable = false, unique = true)

@@ -1,5 +1,6 @@
 package org.abrohamovich.service.interfaces;
 
+import org.abrohamovich.dto.BookDto;
 import org.abrohamovich.dto.CategoryDto;
 import org.abrohamovich.exceptions.CategoryAlreadyExistException;
 import org.abrohamovich.exceptions.CategoryNotFoundException;
@@ -20,6 +21,7 @@ public interface CategoryService {
 
     List<CategoryDto> findByNameLike(String name) throws IllegalArgumentException;
 
+    List<CategoryDto> findByBook(BookDto bookDto);
 
     List<CategoryDto> findAll();
 

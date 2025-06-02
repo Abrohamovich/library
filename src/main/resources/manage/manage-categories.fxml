@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="500.0" prefWidth="700.0" stylesheets="@/style.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.abrohamovich.controller.manage.ManageCategoryController">
+
+    <VBox alignment="TOP_CENTER" layoutX="10.0" layoutY="10.0" spacing="15.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+        <AnchorPane prefHeight="70.0" prefWidth="680.0">
+            <children>
+                <Label layoutX="14.0" layoutY="3.0" prefHeight="47.0" prefWidth="253.0" styleClass="header" text="Manage Categories" />
+                <Button alignment="CENTER_RIGHT" layoutX="586.0" layoutY="3.0" onMouseClicked="#returnToMainMenu" prefHeight="43.0" prefWidth="80.0" styleClass="return" text="Return" textAlignment="CENTER" />
+            </children>
+        </AnchorPane>
+        <HBox alignment="CENTER_LEFT" spacing="10.0">
+            <Label text="Filter by Name:" />
+            <TextField fx:id="filterTextField" onKeyReleased="#filterCategories" prefHeight="25.0" prefWidth="551.0" promptText="Enter category name..." HBox.hgrow="ALWAYS" />
+        </HBox>
+
+        <ListView fx:id="categoryListView" prefWidth="730.0" VBox.vgrow="ALWAYS" />
+
+        <VBox fx:id="editPanel" managed="false" spacing="10.0" visible="false" >
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            </padding>
+            <Label styleClass="subheader" text="Edit Category" />
+            <GridPane hgap="10.0" vgap="10.0" minHeight="150.0">
+                <columnConstraints>
+                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="150.0" minWidth="10.0" prefWidth="100.0" />
+                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="400.0" minWidth="10.0" prefWidth="300.0" />
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                </rowConstraints>
+                <children>
+                    <Label text="Name:" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+                    <TextField fx:id="nameField" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+
+                    <Label text="Description:" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+                    <TextField fx:id="descriptionField" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+                </children>
+            </GridPane>
+            <HBox alignment="CENTER_RIGHT" spacing="10.0">
+                <Button onAction="#saveCategory" text="Save" />
+                <Button onAction="#cancelEdit" styleClass="cancel" text="Cancel" />
+            </HBox>
+        </VBox>
+    </VBox>
+</AnchorPane>

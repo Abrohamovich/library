@@ -1,7 +1,9 @@
 package org.abrohamovich.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.abrohamovich.dto.BookDto;
 import org.abrohamovich.dto.PublisherDto;
+import org.abrohamovich.entity.Genre;
 import org.abrohamovich.entity.Publisher;
 import org.abrohamovich.exceptions.EntityException;
 import org.abrohamovich.exceptions.PublisherAlreadyExistException;
@@ -131,6 +133,18 @@ public class PublisherServiceCRUD implements PublisherService {
             throw new PublisherNotFoundException("Trying to get publisher with address " + address);
         }
         log.info("Found publisher with address: {}", address);
+        return mapper.toDto(publisher.get());
+    }
+
+    @Override
+    public PublisherDto findByBook(BookDto bookDto) {
+        log.debug("Searching for publisher with book title: {}", bookDto.getTitle());
+        Optional<Publisher> publisher = repository.findByBookId(bookDto.getId());
+        if (publisher.isEmpty()) {
+            log.warn("Publisher with book title '{}' not found", bookDto.getTitle());
+            throw new PublisherNotFoundException("Trying to get publisher with book title " + bookDto.getTitle());
+        }
+        log.info("Found publisher with book title: {}", bookDto.getTitle());
         return mapper.toDto(publisher.get());
     }
 

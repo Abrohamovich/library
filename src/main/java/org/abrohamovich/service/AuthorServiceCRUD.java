@@ -2,6 +2,7 @@ package org.abrohamovich.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.abrohamovich.dto.AuthorDto;
+import org.abrohamovich.dto.BookDto;
 import org.abrohamovich.entity.Author;
 import org.abrohamovich.entity.Sex;
 import org.abrohamovich.exceptions.AuthorNotFoundException;
@@ -89,6 +90,16 @@ public class AuthorServiceCRUD implements AuthorService {
         log.debug("Searching for authors with full name: {}", fullName);
         List<Author> authors = repository.findByFullNameLike(fullName);
         log.info("Found {} authors with full name: {}", authors.size(), fullName);
+        return authors.stream()
+                .map(mapper::toDto)
+                .toList();
+    }
+
+    @Override
+    public List<AuthorDto> findByBook(BookDto bookDto) {
+        log.debug("Searching for authors with book title: {}", bookDto.getTitle());
+        List<Author> authors = repository.findByBookId(bookDto.getId());
+        log.info("Found {} authors with book title: {}", authors.size(), bookDto.getTitle());
         return authors.stream()
                 .map(mapper::toDto)
                 .toList();

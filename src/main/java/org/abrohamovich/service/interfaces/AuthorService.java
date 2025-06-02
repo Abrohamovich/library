@@ -1,6 +1,7 @@
 package org.abrohamovich.service.interfaces;
 
 import org.abrohamovich.dto.AuthorDto;
+import org.abrohamovich.dto.BookDto;
 import org.abrohamovich.entity.Sex;
 import org.abrohamovich.exceptions.AuthorNotFoundException;
 import org.abrohamovich.exceptions.EntityException;
@@ -18,6 +19,8 @@ public interface AuthorService {
     List<AuthorDto> findByFullName(String fullName) throws IllegalArgumentException;
 
     List<AuthorDto> findByFullNameLike(String fullName) throws IllegalArgumentException;
+
+    List<AuthorDto> findByBook(BookDto bookDto);
 
     List<AuthorDto> findAll();
 

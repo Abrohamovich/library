@@ -10,6 +10,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@EqualsAndHashCode(of = {"id", "fullName", "dateOfBirth", "nationality"})
 public class AuthorDto {
     private long id;
     @NonNull

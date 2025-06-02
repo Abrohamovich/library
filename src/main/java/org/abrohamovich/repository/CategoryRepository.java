@@ -81,6 +81,22 @@ public class CategoryRepository implements GenericRepo<Category, Long> {
         return Collections.emptyList();
     }
 
+    public List<Category> findByBookId(long bookId) {
+        try (EntityManager em = emf.createEntityManager()) {
+            TypedQuery<Category> query = em.createQuery(
+                    "SELECT c FROM Category c JOIN Book b on b.id = :bookId AND c MEMBER OF b.categories", Category.class);
+
+            query.setParameter("bookId", bookId);
+
+            return query.getResultList();
+        } catch (PersistenceException e) {
+            log.error("Persistence error while finding category by book id - {}: {}", bookId, e.getMessage());
+        } catch (Exception e) {
+            log.error("Unexpected error while finding category by book id - {}: {}", bookId, e.getMessage());
+        }
+        return Collections.emptyList();
+    }
+
     @Override
     public List<Category> findAll() {
         try (EntityManager em = emf.createEntityManager()) {

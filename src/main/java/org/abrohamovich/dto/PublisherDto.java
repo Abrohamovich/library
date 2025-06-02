@@ -9,6 +9,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@EqualsAndHashCode(of = {"id", "name", "address", "email", "website"})
 public class PublisherDto {
     private long id;
     @NonNull

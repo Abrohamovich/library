@@ -16,6 +16,8 @@ public interface BookService {
     BookDto findById(long id)
             throws BookNotFoundException;
 
+    List<BookDto> findByTitle(String title);
+
     List<BookDto> findByAuthors(List<AuthorDto> authorDtos)
             throws IllegalArgumentException;
 

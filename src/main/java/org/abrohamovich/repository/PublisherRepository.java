@@ -129,6 +129,22 @@ public class PublisherRepository implements GenericRepo<Publisher, Long> {
         return Optional.empty();
     }
 
+    public Optional<Publisher> findByBookId(long bookId){
+        try (EntityManager em = emf.createEntityManager()) {
+            TypedQuery<Publisher> query = em.createQuery(
+                    "SELECT p FROM Publisher p JOIN Book b on b.id = :bookId AND p.id = b.publisher.id", Publisher.class);
+
+            query.setParameter("bookId", bookId);
+
+            return Optional.ofNullable(query.getSingleResult());
+        } catch (PersistenceException e) {
+            log.error("Persistence error while finding publisher by book id {}: {}", bookId, e.getMessage());
+        } catch (Exception e) {
+            log.error("Unexpected error while finding publisher by book id {}: {}", bookId, e.getMessage());
+        }
+        return Optional.empty();
+    }
+
     @Override
     public List<Publisher> findAll() {
         try (EntityManager em = emf.createEntityManager()) {

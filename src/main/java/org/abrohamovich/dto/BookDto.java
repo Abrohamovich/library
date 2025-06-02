@@ -16,11 +16,8 @@ import java.util.stream.Collectors;
 @Builder
 public class BookDto {
     private long id;
-    @NonNull
     private String title;
-    @NonNull
     private String isbn;
-    @NonNull
     private String language;
     private int numberOfPages;
     private PatronDto patron;
@@ -30,20 +27,13 @@ public class BookDto {
     private Set<GenreDto> genres = new HashSet<>();
     @Builder.Default
     private Set<CategoryDto> categories = new HashSet<>();
-    @NonNull
     private PublisherDto publisher;
-    @NonNull
     private Status status;
-    @NonNull
     private Format format;
-    @NonNull
     private LocalDate receiptDate;
 
     @Override
     public String toString() {
-        String authorsStr = authors.stream()
-                .map(AuthorDto::toString)
-                .collect(Collectors.joining("; "));
-        return title + " - " + authorsStr;
+        return title;
     }
 }

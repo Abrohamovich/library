@@ -1,6 +1,7 @@
 package org.abrohamovich.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.abrohamovich.dto.BookDto;
 import org.abrohamovich.dto.GenreDto;
 import org.abrohamovich.entity.Genre;
 import org.abrohamovich.exceptions.EntityException;
@@ -81,6 +82,16 @@ public class GenreServiceCRUD implements GenreService {
         log.debug("Searching for genre with name: {}", name);
         List<Genre> genres = repository.findByNameLike(name);
         log.info("Found {} genres with name: {}", genres.size(), name);
+        return genres.stream()
+                .map(mapper::toDto)
+                .toList();
+    }
+
+    @Override
+    public List<GenreDto> findByBook(BookDto bookDto) {
+        log.debug("Searching for genres with book title: {}", bookDto.getTitle());
+        List<Genre> genres = repository.findByBookId(bookDto.getId());
+        log.info("Found {} genres with book title: {}", genres.size(), bookDto.getTitle());
         return genres.stream()
                 .map(mapper::toDto)
                 .toList();
