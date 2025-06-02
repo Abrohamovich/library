@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@EqualsAndHashCode(exclude = {"authors", "genres", "categories", "publisher", "patron"})
 public class BookDto {
     private long id;
     private String title;

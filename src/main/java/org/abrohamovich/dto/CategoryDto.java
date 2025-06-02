@@ -10,9 +10,7 @@ import lombok.*;
 @EqualsAndHashCode(of = {"id", "name", "description"})
 public class CategoryDto {
     private long id;
-    @NonNull
     private String name;
-    @NonNull
     private String description;
 
     @Override
