@@ -129,7 +129,7 @@ public class PublisherRepository implements GenericRepo<Publisher, Long> {
         return Optional.empty();
     }
 
-    public Optional<Publisher> findByBookId(long bookId){
+    public Optional<Publisher> findByBookId(long bookId) {
         try (EntityManager em = emf.createEntityManager()) {
             TypedQuery<Publisher> query = em.createQuery(
                     "SELECT p FROM Publisher p JOIN Book b on b.id = :bookId AND p.id = b.publisher.id", Publisher.class);

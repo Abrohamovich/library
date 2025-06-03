@@ -1,56 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
-<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="535.0" prefWidth="589.0" stylesheets="@/style.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.abrohamovich.controller.create.CreatePublisherController">
+<VBox xmlns:fx="http://javafx.com/fxml/1" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+      minWidth="-Infinity" prefHeight="535.0" prefWidth="589.0" stylesheets="@/style.css"
+      xmlns="http://javafx.com/javafx/17.0.12" fx:controller="org.abrohamovich.controller.create.CreatePublisherController">
     <children>
         <HBox alignment="CENTER_LEFT" prefHeight="52.0" prefWidth="589.0">
             <children>
                 <Label prefHeight="50.0" prefWidth="250.0" styleClass="header" text="Create New Publisher">
                     <HBox.margin>
-                        <Insets left="10.0" />
+                        <Insets left="10.0"/>
                     </HBox.margin>
                 </Label>
             </children>
         </HBox>
         <GridPane alignment="CENTER" hgap="20.0" prefHeight="450.0" prefWidth="600.0" vgap="10.0">
             <columnConstraints>
-                <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="294.0" minWidth="10.0" prefWidth="104.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="397.0" minWidth="10.0" prefWidth="396.0" />
+                <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="294.0" minWidth="10.0"
+                                   prefWidth="104.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="397.0" minWidth="10.0" prefWidth="396.0"/>
             </columnConstraints>
             <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
             </rowConstraints>
             <children>
-                <Label text="Name:" />
-                <TextField fx:id="nameField" promptText="Enter publisher name" GridPane.columnIndex="1" />
+                <Label text="Name:"/>
+                <TextField fx:id="nameField" promptText="Enter publisher name" GridPane.columnIndex="1"/>
 
-                <Label text="Foundation Date:" GridPane.rowIndex="1" />
-                <DatePicker fx:id="foundationDatePicker" promptText="Select foundation date" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <Label text="Foundation Date:" GridPane.rowIndex="1"/>
+                <DatePicker fx:id="foundationDatePicker" promptText="Select foundation date" GridPane.columnIndex="1"
+                            GridPane.rowIndex="1"/>
 
-                <Label text="Address:" GridPane.rowIndex="2" />
-                <TextField fx:id="addressField" promptText="Enter address" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                <Label text="Address:" GridPane.rowIndex="2"/>
+                <TextField fx:id="addressField" promptText="Enter address" GridPane.columnIndex="1"
+                           GridPane.rowIndex="2"/>
 
-                <Label text="Email:" GridPane.rowIndex="3" />
-                <TextField fx:id="emailField" promptText="Enter email" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                <Label text="Email:" GridPane.rowIndex="3"/>
+                <TextField fx:id="emailField" promptText="Enter email" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
 
-                <Label text="Website:" GridPane.rowIndex="4" />
-                <TextField fx:id="websiteField" promptText="Enter website URL" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                <Label text="Website:" GridPane.rowIndex="4"/>
+                <TextField fx:id="websiteField" promptText="Enter website URL" GridPane.columnIndex="1"
+                           GridPane.rowIndex="4"/>
             </children>
             <padding>
-                <Insets left="40.0" right="40.0" top="20.0" />
+                <Insets left="40.0" right="40.0" top="20.0"/>
             </padding>
         </GridPane>
         <HBox alignment="CENTER" prefHeight="70.0" prefWidth="600.0" spacing="20.0">
             <children>
-                <Button onAction="#createPublisher" prefHeight="40.0" prefWidth="120.0" text="Create" />
-                <Button onAction="#cancelCreation" prefHeight="40.0" prefWidth="120.0" styleClass="cancel" text="Cancel" />
+                <Button onAction="#createPublisher" prefHeight="40.0" prefWidth="120.0" text="Create"/>
+                <Button onAction="#cancelCreation" prefHeight="40.0" prefWidth="120.0" styleClass="cancel"
+                        text="Cancel"/>
             </children>
         </HBox>
     </children>

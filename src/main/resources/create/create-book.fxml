@@ -3,94 +3,116 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
-<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="881.0" prefWidth="835.0" stylesheets="@/style.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.abrohamovich.controller.create.CreateBookController">
+<VBox xmlns:fx="http://javafx.com/fxml/1" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+      minWidth="-Infinity" prefHeight="881.0" prefWidth="835.0" stylesheets="@/style.css"
+      xmlns="http://javafx.com/javafx/17.0.12" fx:controller="org.abrohamovich.controller.create.CreateBookController">
     <children>
         <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="835.0">
             <children>
                 <Label prefHeight="20.0" prefWidth="350.0" styleClass="header" text="Create New Book">
                     <HBox.margin>
-                        <Insets left="10.0" />
+                        <Insets left="10.0"/>
                     </HBox.margin>
                 </Label>
             </children>
         </HBox>
         <VBox alignment="TOP_CENTER" prefHeight="760.0" prefWidth="736.0" spacing="20.0">
             <padding>
-                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
             </padding>
             <children>
                 <GridPane hgap="10.0" prefHeight="781.0" prefWidth="791.0" vgap="10.0">
                     <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="250.0" minWidth="10.0" prefWidth="132.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="491.0" minWidth="10.0" prefWidth="479.0" />
-                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="142.0" minWidth="10.0" prefWidth="121.0" /> </columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="250.0" minWidth="10.0" prefWidth="132.0"/>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="491.0" minWidth="10.0" prefWidth="479.0"/>
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="142.0" minWidth="10.0"
+                                           prefWidth="121.0"/>
+                    </columnConstraints>
                     <rowConstraints>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="98.0" minHeight="10.0" prefHeight="88.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="101.0" minHeight="10.0" prefHeight="84.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="122.0" minHeight="10.0" prefHeight="95.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="82.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="59.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="52.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                        <RowConstraints maxHeight="98.0" minHeight="10.0" prefHeight="88.0" vgrow="SOMETIMES"/>
+                        <RowConstraints maxHeight="101.0" minHeight="10.0" prefHeight="84.0" vgrow="SOMETIMES"/>
+                        <RowConstraints maxHeight="122.0" minHeight="10.0" prefHeight="95.0" vgrow="SOMETIMES"/>
+                        <RowConstraints maxHeight="82.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                        <RowConstraints maxHeight="59.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                        <RowConstraints maxHeight="52.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
                     </rowConstraints>
                     <children>
-                        <Label prefHeight="16.0" prefWidth="154.0" text="Title:" />
-                        <TextField fx:id="bookTitleField" promptText="Enter book title" GridPane.columnIndex="1" GridPane.columnSpan="2" />
+                        <Label prefHeight="16.0" prefWidth="154.0" text="Title:"/>
+                        <TextField fx:id="bookTitleField" promptText="Enter book title" GridPane.columnIndex="1"
+                                   GridPane.columnSpan="2"/>
 
-                        <Label prefHeight="16.0" prefWidth="157.0" text="ISBN:" GridPane.rowIndex="1" />
-                        <TextField fx:id="isbnField" promptText="Enter ISBN" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+                        <Label prefHeight="16.0" prefWidth="157.0" text="ISBN:" GridPane.rowIndex="1"/>
+                        <TextField fx:id="isbnField" promptText="Enter ISBN" GridPane.columnIndex="1"
+                                   GridPane.columnSpan="2" GridPane.rowIndex="1"/>
 
-                        <Label prefHeight="16.0" prefWidth="159.0" text="Language:" GridPane.rowIndex="2" />
-                        <TextField fx:id="languageField" promptText="Enter language (e.g., English)" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+                        <Label prefHeight="16.0" prefWidth="159.0" text="Language:" GridPane.rowIndex="2"/>
+                        <TextField fx:id="languageField" promptText="Enter language (e.g., English)"
+                                   GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2"/>
 
-                        <Label prefHeight="16.0" prefWidth="157.0" text="Number of Pages:" GridPane.rowIndex="3" />
-                        <Spinner fx:id="numberOfPagesSpinner" editable="true" prefHeight="44.0" prefWidth="250.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+                        <Label prefHeight="16.0" prefWidth="157.0" text="Number of Pages:" GridPane.rowIndex="3"/>
+                        <Spinner fx:id="numberOfPagesSpinner" editable="true" prefHeight="44.0" prefWidth="250.0"
+                                 GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3"/>
 
-                        <Label prefHeight="16.0" prefWidth="190.0" text="Author(s):" GridPane.rowIndex="4" />
-                        <ListView fx:id="authorListView" prefHeight="100.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                        <Button fx:id="createAuthorButton" onAction="#onCreateAuthor" prefHeight="32.0" prefWidth="120.0" text="Create New" GridPane.columnIndex="2" GridPane.rowIndex="4" GridPane.valignment="TOP">
+                        <Label prefHeight="16.0" prefWidth="190.0" text="Author(s):" GridPane.rowIndex="4"/>
+                        <ListView fx:id="authorListView" prefHeight="100.0" GridPane.columnIndex="1"
+                                  GridPane.rowIndex="4"/>
+                        <Button fx:id="createAuthorButton" onAction="#onCreateAuthor" prefHeight="32.0"
+                                prefWidth="120.0" text="Create New" GridPane.columnIndex="2" GridPane.rowIndex="4"
+                                GridPane.valignment="TOP">
                             <GridPane.margin>
-                                <Insets top="5.0" />
+                                <Insets top="5.0"/>
                             </GridPane.margin>
                         </Button>
 
-                        <Label prefHeight="16.0" prefWidth="163.0" text="Genre(s):" GridPane.rowIndex="5" />
-                        <ListView fx:id="genreListView" prefHeight="100.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                        <Button fx:id="createGenreButton" onAction="#onCreateGenre" prefHeight="32.0" prefWidth="120.0" text="Create New" GridPane.columnIndex="2" GridPane.rowIndex="5" GridPane.valignment="TOP">
+                        <Label prefHeight="16.0" prefWidth="163.0" text="Genre(s):" GridPane.rowIndex="5"/>
+                        <ListView fx:id="genreListView" prefHeight="100.0" GridPane.columnIndex="1"
+                                  GridPane.rowIndex="5"/>
+                        <Button fx:id="createGenreButton" onAction="#onCreateGenre" prefHeight="32.0" prefWidth="120.0"
+                                text="Create New" GridPane.columnIndex="2" GridPane.rowIndex="5"
+                                GridPane.valignment="TOP">
                             <GridPane.margin>
-                                <Insets top="5.0" />
+                                <Insets top="5.0"/>
                             </GridPane.margin>
                         </Button>
 
-                        <Label prefHeight="16.0" prefWidth="178.0" text="Category(s):" GridPane.rowIndex="6" />
-                        <ListView fx:id="categoryListView" prefHeight="100.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-                        <Button fx:id="createCategoryButton" onAction="#onCreateCategory" prefHeight="32.0" prefWidth="120.0" text="Create New" GridPane.columnIndex="2" GridPane.rowIndex="6" GridPane.valignment="TOP">
+                        <Label prefHeight="16.0" prefWidth="178.0" text="Category(s):" GridPane.rowIndex="6"/>
+                        <ListView fx:id="categoryListView" prefHeight="100.0" GridPane.columnIndex="1"
+                                  GridPane.rowIndex="6"/>
+                        <Button fx:id="createCategoryButton" onAction="#onCreateCategory" prefHeight="32.0"
+                                prefWidth="120.0" text="Create New" GridPane.columnIndex="2" GridPane.rowIndex="6"
+                                GridPane.valignment="TOP">
                             <GridPane.margin>
-                                <Insets top="5.0" />
+                                <Insets top="5.0"/>
                             </GridPane.margin>
                         </Button>
 
-                        <Label prefHeight="16.0" prefWidth="168.0" text="Publisher:" GridPane.rowIndex="7" />
-                        <ComboBox fx:id="publisherComboBox" prefWidth="Infinity" promptText="Select publisher" GridPane.columnIndex="1" GridPane.columnSpan="1" GridPane.rowIndex="7" />
-                        <Button fx:id="createPublisherButton" onAction="#onCreatePublisher" prefHeight="32.0" prefWidth="120.0" text="Create New" GridPane.columnIndex="2" GridPane.rowIndex="7" GridPane.valignment="CENTER" />
-                        
-                        <Label prefHeight="16.0" prefWidth="147.0" text="Format:" GridPane.rowIndex="8" />
-                        <ComboBox fx:id="formatComboBox" prefWidth="Infinity" promptText="Select format" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="8" />
+                        <Label prefHeight="16.0" prefWidth="168.0" text="Publisher:" GridPane.rowIndex="7"/>
+                        <ComboBox fx:id="publisherComboBox" prefWidth="Infinity" promptText="Select publisher"
+                                  GridPane.columnIndex="1" GridPane.columnSpan="1" GridPane.rowIndex="7"/>
+                        <Button fx:id="createPublisherButton" onAction="#onCreatePublisher" prefHeight="32.0"
+                                prefWidth="120.0" text="Create New" GridPane.columnIndex="2" GridPane.rowIndex="7"
+                                GridPane.valignment="CENTER"/>
 
-                        <Label prefHeight="16.0" prefWidth="157.0" text="Receipt Date:" GridPane.rowIndex="9" />
-                        <DatePicker fx:id="receiptDatePicker" prefWidth="Infinity" promptText="Select receipt date" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="9" />
+                        <Label prefHeight="16.0" prefWidth="147.0" text="Format:" GridPane.rowIndex="8"/>
+                        <ComboBox fx:id="formatComboBox" prefWidth="Infinity" promptText="Select format"
+                                  GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="8"/>
+
+                        <Label prefHeight="16.0" prefWidth="157.0" text="Receipt Date:" GridPane.rowIndex="9"/>
+                        <DatePicker fx:id="receiptDatePicker" prefWidth="Infinity" promptText="Select receipt date"
+                                    GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="9"/>
                     </children>
                 </GridPane>
             </children>
         </VBox>
         <HBox alignment="CENTER" prefHeight="48.0" prefWidth="685.0" spacing="20.0">
             <children>
-                <Button onAction="#createBook" prefHeight="40.0" prefWidth="120.0" text="Create Book" />
-                <Button onAction="#cancelCreation" prefHeight="40.0" prefWidth="120.0" styleClass="cancel" text="Cancel" />
+                <Button onAction="#createBook" prefHeight="40.0" prefWidth="120.0" text="Create Book"/>
+                <Button onAction="#cancelCreation" prefHeight="40.0" prefWidth="120.0" styleClass="cancel"
+                        text="Cancel"/>
             </children>
         </HBox>
     </children>

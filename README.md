@@ -18,7 +18,8 @@ for testing.
 ## Features
 
 - **Book Management**:
-    - Manage physical book instances (`Book`) with attributes like title, ISBN, authors, genres, categories, publisher, page count, receipt date, status,
+    - Manage physical book instances (`Book`) with attributes like title, ISBN, authors, genres, categories, publisher,
+      page count, receipt date, status,
       and format.
 - **Author Management**:
     - Store author details including name, date of birth, sex, and nationality.

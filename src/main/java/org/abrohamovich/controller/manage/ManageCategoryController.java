@@ -84,38 +84,24 @@ public class ManageCategoryController {
     public void saveCategory(ActionEvent actionEvent) {
         if (selectedCategoryForEdit == null) return;
 
-        String newName = nameField.getText();
-        String newDescription = descriptionField.getText();
-
-        if (newName.isBlank() || newDescription.isBlank()) {
-            NotifyDialogController.showNotification(
-                    ((Node) actionEvent.getSource()).getScene().getWindow(),
-                    "Incorrect input data",
-                    NotifyDialogController.NotificationType.ERROR
-            );
-        }
-
-        selectedCategoryForEdit.setName(newName);
-        selectedCategoryForEdit.setDescription(newDescription);
+        selectedCategoryForEdit.setName(nameField.getText().trim());
+        selectedCategoryForEdit.setDescription(descriptionField.getText().trim());
 
         try {
             categoryService.update(selectedCategoryForEdit);
-
             NotifyDialogController.showNotification(
                     ((Node) actionEvent.getSource()).getScene().getWindow(),
                     "Category was updated successfully!",
                     NotifyDialogController.NotificationType.SUCCESS
             );
-        } catch (CategoryNotFoundException e) {
+        } catch (CategoryNotFoundException | IllegalArgumentException e) {
             NotifyDialogController.showNotification(
                     ((Node) actionEvent.getSource()).getScene().getWindow(),
-                    "Category you want to update does not exist!",
+                    e.getMessage(),
                     NotifyDialogController.NotificationType.ERROR
             );
         }
-
         loadAllCategories();
-
         cancelEdit(null);
     }
 

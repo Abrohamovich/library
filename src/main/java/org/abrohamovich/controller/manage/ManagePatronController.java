@@ -19,8 +19,6 @@ import org.abrohamovich.dto.PatronDto;
 import org.abrohamovich.exceptions.PatronNotFoundException;
 import org.abrohamovich.service.interfaces.PatronService;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 import java.util.List;
 
 @Slf4j
@@ -114,46 +112,27 @@ public class ManagePatronController {
     public void savePatron(ActionEvent actionEvent) {
         if (selectedPatronForEdit == null) return;
 
-        String newFullName = fullNameField.getText().trim();
-        String newEmail = emailField.getText().trim();
-        String newPhone = phoneField.getText().trim();
-        String newAddress = addressField.getText().trim();
-        LocalDate newDateOfBirth = dateOfBirthPicker.getValue();
-        LocalDate newRegistrationDate = registerDatePicker.getValue();
-
-        if (newFullName.isBlank() || newEmail.isBlank() ||
-        newPhone.isBlank() || newAddress.isBlank()) {
-            NotifyDialogController.showNotification(
-                    ((Node) actionEvent.getSource()).getScene().getWindow(),
-                    "Incorrect input data",
-                    NotifyDialogController.NotificationType.ERROR
-            );
-        }
-
-
-        selectedPatronForEdit.setFullName(newFullName);
-        selectedPatronForEdit.setEmail(newEmail);
-        selectedPatronForEdit.setPhone(newPhone);
-        selectedPatronForEdit.setAddress(newAddress);
-        selectedPatronForEdit.setDateOfBirth(newDateOfBirth);
-        selectedPatronForEdit.setRegisterDate(newRegistrationDate);
+        selectedPatronForEdit.setFullName(fullNameField.getText().trim());
+        selectedPatronForEdit.setEmail(emailField.getText().trim());
+        selectedPatronForEdit.setPhone(phoneField.getText().trim());
+        selectedPatronForEdit.setAddress(addressField.getText().trim());
+        selectedPatronForEdit.setDateOfBirth(dateOfBirthPicker.getValue());
+        selectedPatronForEdit.setRegisterDate(registerDatePicker.getValue());
 
         try {
             patronService.update(selectedPatronForEdit);
-
             NotifyDialogController.showNotification(
                     ((Node) actionEvent.getSource()).getScene().getWindow(),
                     "Patron was updated successfully!",
                     NotifyDialogController.NotificationType.SUCCESS
             );
-        } catch (PatronNotFoundException e) {
+        } catch (PatronNotFoundException | IllegalArgumentException e) {
             NotifyDialogController.showNotification(
                     ((Node) actionEvent.getSource()).getScene().getWindow(),
-                    "Patron you want to update does not exist",
+                    e.getMessage(),
                     NotifyDialogController.NotificationType.ERROR
             );
         }
-
         loadAllPatrons();
         cancelEdit(null);
     }

@@ -135,6 +135,42 @@ class AuthorRepositoryTest {
     }
 
     @Test
+    void findByFullNameLike_ReturnsAuthors() {
+        Author newAuthor1 = Author.builder()
+                .fullName("author name 1")
+                .dateOfBirth(LocalDate.of(1958, 10, 1))
+                .sex(Sex.MALE).nationality("Honduras")
+                .build();
+        Author newAuthor2 = Author.builder()
+                .fullName("another author name 2")
+                .dateOfBirth(LocalDate.of(1958, 10, 1))
+                .sex(Sex.MALE).nationality("Honduras")
+                .build();
+
+        try (EntityManager em = emf.createEntityManager()) {
+            em.getTransaction().begin();
+            em.persist(newAuthor1);
+            em.persist(newAuthor2);
+            em.getTransaction().commit();
+        }
+
+        List<Author> authors = repo.findByFullNameLike("name");
+
+        assertEquals(2, authors.size());
+        assertArrayEquals(new Author[]{newAuthor1, newAuthor2}, authors.toArray());
+    }
+
+    @Test
+    void findByFullNameLike_ReturnsEmptyList() {
+        persistAuthors();
+
+        List<Author> authors = repo.findByFullNameLike("GermanyUSA");
+
+        assertEquals(0, authors.size());
+    }
+
+
+    @Test
     void findBySex_ReturnsAuthors() {
         persistAuthors();
 

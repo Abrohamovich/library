@@ -19,7 +19,8 @@ public interface GenreService {
     GenreDto findByName(String name)
             throws GenreNotFoundException, IllegalArgumentException;
 
-    List<GenreDto> findByNameLike(String name) throws IllegalArgumentException;
+    List<GenreDto> findByNameLike(String name)
+            throws IllegalArgumentException;
 
     List<GenreDto> findByBook(BookDto bookDto);
 

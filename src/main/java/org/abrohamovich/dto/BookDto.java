@@ -7,13 +7,13 @@ import org.abrohamovich.entity.Status;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@EqualsAndHashCode(exclude = {"authors", "genres", "categories", "publisher", "patron"})
 public class BookDto {
     private long id;
     private String title;

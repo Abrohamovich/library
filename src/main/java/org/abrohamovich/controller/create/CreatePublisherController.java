@@ -11,8 +11,6 @@ import org.abrohamovich.exceptions.EntityException;
 import org.abrohamovich.exceptions.PublisherAlreadyExistException;
 import org.abrohamovich.service.interfaces.PublisherService;
 
-import java.time.LocalDate;
-
 public class CreatePublisherController {
 
     private final PublisherService publisherService;
@@ -34,7 +32,7 @@ public class CreatePublisherController {
     @FXML
     public void initialize() {
         nameField.textProperty().addListener((observable, oldValue, newValue) -> {
-                if (!newValue.matches("[-`'\\p{L}\\p{M} ]*")) {
+            if (!newValue.matches("[-`'\\p{L}\\p{M} ]*")) {
                 nameField.setText(oldValue);
             }
         });
@@ -54,47 +52,26 @@ public class CreatePublisherController {
 
     @FXML
     public void createPublisher(ActionEvent actionEvent) {
-        String name = nameField.getText();
-        String address = addressField.getText();
-        String email = emailField.getText();
-        String website = websiteField.getText();
-        LocalDate foundationDate = foundationDatePicker.getValue();
-
-        if (name.isBlank() || address.isBlank() || email.isBlank() || website.isBlank()) {
-            NotifyDialogController.showNotification(
-                    nameField.getScene().getWindow(),
-                    "Incorrect input data",
-                    NotifyDialogController.NotificationType.ERROR
-            );
-        }
-
-        PublisherDto publisherDto = new PublisherDto();
-        publisherDto.setName(name);
-        publisherDto.setAddress(address);
-        publisherDto.setEmail(email);
-        publisherDto.setWebsite(website);
-        publisherDto.setFoundationDate(foundationDate);
+        PublisherDto publisherDto = PublisherDto.builder()
+                .name(nameField.getText().trim())
+                .address(addressField.getText().trim())
+                .email(emailField.getText().trim())
+                .website(websiteField.getText().trim())
+                .foundationDate(foundationDatePicker.getValue())
+                .build();
 
         try {
             publisherService.save(publisherDto);
-
             clearFields();
-
             NotifyDialogController.showNotification(
                     nameField.getScene().getWindow(),
                     "Publisher successfully saved",
                     NotifyDialogController.NotificationType.SUCCESS
             );
-        } catch (PublisherAlreadyExistException e) {
+        } catch (PublisherAlreadyExistException | IllegalArgumentException | EntityException e) {
             NotifyDialogController.showNotification(
                     nameField.getScene().getWindow(),
-                    "Publisher with this name already exists",
-                    NotifyDialogController.NotificationType.ERROR
-            );
-        } catch (EntityException e) {
-            NotifyDialogController.showNotification(
-                    nameField.getScene().getWindow(),
-                    "Something went wrong while saving Author",
+                    e.getMessage(),
                     NotifyDialogController.NotificationType.ERROR
             );
         }

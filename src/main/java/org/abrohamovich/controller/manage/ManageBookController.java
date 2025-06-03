@@ -20,9 +20,7 @@ import org.abrohamovich.entity.Format;
 import org.abrohamovich.exceptions.BookNotFoundException;
 import org.abrohamovich.service.interfaces.*;
 
-import java.time.LocalDate;
-import java.util.Collections;
-import java.util.List;
+import java.util.HashSet;
 
 @RequiredArgsConstructor
 public class ManageBookController {
@@ -112,43 +110,31 @@ public class ManageBookController {
     public void saveBook(ActionEvent actionEvent) {
         if (selectedBookForEdit == null) return;
 
-        String newTitle = editBookTitleField.getText().trim();
-        String newIsbn = editIsbnField.getText().trim();
-        String newLanguage = editLanguageField.getText().trim();
-        int newNumberOfPages = editNumberOfPagesSpinner.getValue();
-        List<AuthorDto> newAuthors = editAuthorListView.getSelectionModel().getSelectedItems();
-        List<GenreDto> newGenres = editGenreListView.getSelectionModel().getSelectedItems();
-        List<CategoryDto> newCategories = editCategoryListView.getSelectionModel().getSelectedItems();
-        PublisherDto newPublisher = editPublisherComboBox.getSelectionModel().getSelectedItem();
-        Format newFormat = editFormatComboBox.getSelectionModel().getSelectedItem();
-
-        if (newTitle.isBlank() || newIsbn.isBlank() || newLanguage.isBlank() || newNumberOfPages < 1 ||
-            newAuthors.isEmpty() || newGenres.isEmpty() || newCategories.isEmpty() || newPublisher == null || newFormat == null) {
-            NotifyDialogController.showNotification(
-                    ((Node) actionEvent.getSource()).getScene().getWindow(),
-                    "Incorrect input data",
-                    NotifyDialogController.NotificationType.ERROR
-            );
-        }
+        selectedBookForEdit.setTitle(editBookTitleField.getText().trim());
+        selectedBookForEdit.setIsbn(editIsbnField.getText().trim());
+        selectedBookForEdit.setLanguage(editLanguageField.getText().trim());
+        selectedBookForEdit.setNumberOfPages(editNumberOfPagesSpinner.getValue());
+        selectedBookForEdit.setAuthors(new HashSet<>(editAuthorListView.getSelectionModel().getSelectedItems()));
+        selectedBookForEdit.setGenres(new HashSet<>(editGenreListView.getSelectionModel().getSelectedItems()));
+        selectedBookForEdit.setCategories(new HashSet<>(editCategoryListView.getSelectionModel().getSelectedItems()));
+        selectedBookForEdit.setPublisher(editPublisherComboBox.getSelectionModel().getSelectedItem());
+        selectedBookForEdit.setFormat(editFormatComboBox.getSelectionModel().getSelectedItem());
 
         try {
             bookService.update(selectedBookForEdit);
-
             NotifyDialogController.showNotification(
                     ((Node) actionEvent.getSource()).getScene().getWindow(),
                     "Book successfully updated",
                     NotifyDialogController.NotificationType.SUCCESS
             );
-        } catch (BookNotFoundException e) {
+        } catch (BookNotFoundException | IllegalArgumentException e) {
             NotifyDialogController.showNotification(
                     ((Node) actionEvent.getSource()).getScene().getWindow(),
-                    "Book you want to update does not exist",
+                    e.getMessage(),
                     NotifyDialogController.NotificationType.ERROR
             );
         }
-
         loadAllBooks();
-
         cancelEdit(null);
     }
 

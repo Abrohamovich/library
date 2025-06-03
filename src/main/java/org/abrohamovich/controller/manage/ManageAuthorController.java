@@ -18,7 +18,6 @@ import org.abrohamovich.entity.Sex;
 import org.abrohamovich.exceptions.AuthorNotFoundException;
 import org.abrohamovich.service.interfaces.AuthorService;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public class ManageAuthorController {
@@ -96,44 +95,28 @@ public class ManageAuthorController {
 
     @FXML
     public void saveAuthor(ActionEvent actionEvent) {
-        if (selectedAuthorForEdit == null) return;;
+        if (selectedAuthorForEdit == null) return;
 
-        String newFullName = fullNameField.getText().trim();
-        String newNationality = nationalityField.getText().trim();
-        Sex newSex = sexComboBox.getValue();
-        LocalDate newDateOfBirth = dateOfBirthPicker.getValue();
-
-        if (newFullName.isBlank() || newNationality.isBlank()) {
-            NotifyDialogController.showNotification(
-                    fullNameField.getScene().getWindow(),
-                    "Incorrect input data",
-                    NotifyDialogController.NotificationType.ERROR
-            );
-        }
-
-        selectedAuthorForEdit.setFullName(newFullName);
-        selectedAuthorForEdit.setNationality(newNationality);
-        selectedAuthorForEdit.setSex(newSex);
-        selectedAuthorForEdit.setDateOfBirth(newDateOfBirth);
+        selectedAuthorForEdit.setFullName(fullNameField.getText().trim());
+        selectedAuthorForEdit.setNationality(nationalityField.getText().trim());
+        selectedAuthorForEdit.setSex(sexComboBox.getValue());
+        selectedAuthorForEdit.setDateOfBirth(dateOfBirthPicker.getValue());
 
         try {
             authorService.update(selectedAuthorForEdit);
-
             NotifyDialogController.showNotification(
                     fullNameField.getScene().getWindow(),
                     "Author successfully updated",
                     NotifyDialogController.NotificationType.SUCCESS
             );
-        } catch (AuthorNotFoundException e) {
+        } catch (AuthorNotFoundException | IllegalArgumentException e) {
             NotifyDialogController.showNotification(
                     fullNameField.getScene().getWindow(),
-                    "Author you want to update does not exist",
+                    e.getMessage(),
                     NotifyDialogController.NotificationType.ERROR
             );
         }
-
         loadAllAuthors();
-
         cancelEdit(null);
     }
 

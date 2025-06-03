@@ -34,41 +34,23 @@ public class CreateGenreController {
 
     @FXML
     public void createGenre(ActionEvent actionEvent) {
-        String name = nameField.getText();
-        String description = descriptionArea.getText();
-
-        if (name.isBlank() || description.isBlank()) {
-            NotifyDialogController.showNotification(
-                    nameField.getScene().getWindow(),
-                    "Incorrect input data",
-                    NotifyDialogController.NotificationType.ERROR
-            );
-        }
-
-        GenreDto genreDto = new GenreDto();
-        genreDto.setName(name);
-        genreDto.setDescription(description);
+        GenreDto genreDto = GenreDto.builder()
+                .name(nameField.getText().trim())
+                .description(descriptionArea.getText().trim())
+                .build();
 
         try {
             genreService.save(genreDto);
-
             clearFields();
-
             NotifyDialogController.showNotification(
                     nameField.getScene().getWindow(),
                     "Genre successfully saved!",
                     NotifyDialogController.NotificationType.SUCCESS
             );
-        } catch (GenreAlreadyExistException e) {
+        } catch (GenreAlreadyExistException | EntityException | IllegalArgumentException e) {
             NotifyDialogController.showNotification(
                     nameField.getScene().getWindow(),
-                    "Genre with this name already exists!",
-                    NotifyDialogController.NotificationType.ERROR
-            );
-        } catch (EntityException e) {
-            NotifyDialogController.showNotification(
-                    nameField.getScene().getWindow(),
-                    "Something went wrong while saving genre!",
+                    e.getMessage(),
                     NotifyDialogController.NotificationType.ERROR
             );
         }

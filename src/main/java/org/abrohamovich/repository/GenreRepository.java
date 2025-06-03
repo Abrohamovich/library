@@ -6,7 +6,6 @@ import jakarta.persistence.PersistenceException;
 import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.abrohamovich.entity.Category;
 import org.abrohamovich.entity.Genre;
 
 import java.util.Collections;

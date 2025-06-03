@@ -11,9 +11,10 @@ import org.abrohamovich.mapper.BookMapper;
 import org.abrohamovich.repository.BookRepository;
 import org.abrohamovich.service.interfaces.BookService;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 public class BookServiceCRUD implements BookService {
@@ -32,6 +33,7 @@ public class BookServiceCRUD implements BookService {
             log.error("Invalid argument: null bookDto");
             throw new IllegalArgumentException("Invalid argument: null bookDto");
         }
+        validateBookDto(bookDto);
         log.info("Attempting to save book with ISBN: {}", bookDto.getIsbn());
         Optional<Book> book = repository.save(mapper.toEntity(bookDto));
         if (book.isEmpty()) {
@@ -196,6 +198,7 @@ public class BookServiceCRUD implements BookService {
             log.error("Invalid argument: null bookDto");
             throw new IllegalArgumentException("Invalid argument: null bookDto");
         }
+        validateBookDto(bookDto);
         log.info("Updating book with ID: {}", bookDto.getId());
         Optional<Book> book = repository.update(mapper.toEntity(bookDto));
         if (book.isEmpty()) {
@@ -220,5 +223,45 @@ public class BookServiceCRUD implements BookService {
         }
         repository.deleteById(bookDto.getId());
         log.info("Successfully deleted book with ID: {}", bookDto.getId());
+    }
+
+    private void validateBookDto(BookDto bookDto) {
+        List<String> errors = new ArrayList<>();
+
+        if (bookDto.getTitle() == null || bookDto.getTitle().isBlank()) {
+            errors.add("Title is null or blank");
+        }
+        if (bookDto.getIsbn() == null || bookDto.getIsbn().isBlank()) {
+            errors.add("ISBN is null or blank");
+        }
+        if (bookDto.getLanguage() == null || bookDto.getLanguage().isBlank()) {
+            errors.add("Language is null or blank");
+        }
+        if (bookDto.getNumberOfPages() < 1) {
+            errors.add("Number of pages is less than 1");
+        }
+        if (bookDto.getAuthors().isEmpty()) {
+            errors.add("Authors cannot be empty");
+        }
+        if (bookDto.getGenres().isEmpty()) {
+            errors.add("Genres cannot be empty");
+        }
+        if (bookDto.getCategories().isEmpty()) {
+            errors.add("Categories cannot be empty");
+        }
+        if (bookDto.getFormat() == null) errors.add("Format cannot be null");
+        if (bookDto.getStatus() == null) errors.add("Status cannot be null");
+        if (bookDto.getPublisher() == null) errors.add("Publisher cannot be null");
+        if (bookDto.getReceiptDate() == null) {
+            errors.add("ReceiptDate cannot be null");
+        } else if (bookDto.getReceiptDate().isAfter(LocalDate.now())) {
+            errors.add("ReceiptDate cannot be in the future");
+        }
+
+        if (!errors.isEmpty()) {
+            String errorMessage = String.join("; ", errors);
+            log.error("Validation failed for book: {}. Errors: {}", bookDto.getTitle(), errorMessage);
+            throw new IllegalArgumentException("Validation failed: " + errorMessage);
+        }
     }
 }

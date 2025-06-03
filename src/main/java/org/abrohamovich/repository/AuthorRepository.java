@@ -48,20 +48,6 @@ public class AuthorRepository implements GenericRepo<Author, Long> {
         return Optional.empty();
     }
 
-    public List<Author> findByIdIn(List<Long> ids) {
-        try (EntityManager em = emf.createEntityManager()) {
-            TypedQuery<Author> query = em.createQuery(
-                    "SELECT a FROM Author a WHERE a.id IN :ids",
-                    Author.class
-            );
-            query.setParameter("ids", ids);
-            return query.getResultList();
-        } catch (Exception e) {
-            log.error("Unexpected error while finding authors by ids {}: {}", ids, e.getMessage());
-        }
-        return Collections.emptyList();
-    }
-
     public List<Author> findByFullName(String fullName) {
         try (EntityManager em = emf.createEntityManager()) {
             TypedQuery<Author> query = em.createQuery(
@@ -94,7 +80,7 @@ public class AuthorRepository implements GenericRepo<Author, Long> {
         return Collections.emptyList();
     }
 
-    public List<Author> findByBookId (long bookId) {
+    public List<Author> findByBookId(long bookId) {
         try (EntityManager em = emf.createEntityManager()) {
             TypedQuery<Author> query = em.createQuery(
                     "SELECT a FROM Author a JOIN Book b ON b.id = :bookId AND a MEMBER OF b.authors",

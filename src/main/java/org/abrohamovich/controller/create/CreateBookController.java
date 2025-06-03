@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -20,7 +21,6 @@ import org.abrohamovich.service.interfaces.*;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.HashSet;
-import java.util.Set;
 
 @Slf4j
 public class CreateBookController {
@@ -86,7 +86,7 @@ public class CreateBookController {
                 isbnField.setText(oldValue);
             }
 
-            if(newValue.length()>13) {
+            if (newValue.length() > 13) {
                 isbnField.setText(oldValue);
             }
         });
@@ -98,9 +98,9 @@ public class CreateBookController {
         });
 
         receiptDatePicker.valueProperty().addListener((observable, oldValue, newValue) -> {
-           if (!newValue.equals(LocalDate.now())) {
-               receiptDatePicker.setValue(LocalDate.now());
-           }
+            if (!newValue.equals(LocalDate.now())) {
+                receiptDatePicker.setValue(LocalDate.now());
+            }
         });
 
         authorListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -124,52 +124,34 @@ public class CreateBookController {
 
     @FXML
     public void createBook(ActionEvent actionEvent) {
-        String title = bookTitleField.getText();
-        String isbn = isbnField.getText();
-        String language = languageField.getText();
-        int numberOfPages = numberOfPagesSpinner.getValue();
-        Set<AuthorDto> selectedAuthors = new HashSet<>(authorListView.getSelectionModel().getSelectedItems());
-        Set<GenreDto> selectedGenres = new HashSet<>(genreListView.getSelectionModel().getSelectedItems());
-        Set<CategoryDto> selectedCategories = new HashSet<>(categoryListView.getSelectionModel().getSelectedItems());
-        PublisherDto selectedPublisher = publisherComboBox.getValue();
-        Format selectedFormat = formatComboBox.getValue();
-        LocalDate receiptDate = receiptDatePicker.getValue();
-
-        if (title == null || title.isBlank()) { showError("Book title cannot be empty."); return; }
-        if (isbn == null || isbn.isBlank()) { showError("ISBN cannot be empty."); return; }
-        if (language == null || language.isBlank()) { showError("Language cannot be empty."); return; }
-        if (numberOfPages <= 0) { showError("Number of pages must be greater than 0."); return; }
-        if (selectedAuthors.isEmpty()) { showError("Please select at least one Author."); return; }
-        if (selectedGenres.isEmpty()) { showError("Please select at least one Genre."); return; }
-        if (selectedCategories.isEmpty()) { showError("Please select at least one Category."); return; }
-        if (selectedPublisher == null) { showError("Please select a Publisher."); return; }
-
         BookDto bookDto = BookDto.builder()
-                .title(title)
-                .isbn(isbn)
-                .language(language)
-                .numberOfPages(numberOfPages)
-                .authors(selectedAuthors)
-                .genres(selectedGenres)
-                .categories(selectedCategories)
-                .publisher(selectedPublisher)
+                .title(bookTitleField.getText().trim())
+                .isbn(isbnField.getText().trim())
+                .language(languageField.getText().trim())
+                .numberOfPages(numberOfPagesSpinner.getValue())
+                .authors(new HashSet<>(authorListView.getSelectionModel().getSelectedItems()))
+                .genres(new HashSet<>(genreListView.getSelectionModel().getSelectedItems()))
+                .categories(new HashSet<>(categoryListView.getSelectionModel().getSelectedItems()))
+                .publisher(publisherComboBox.getValue())
                 .status(Status.AVAILABLE)
-                .format(selectedFormat)
-                .receiptDate(receiptDate)
+                .format(formatComboBox.getValue())
+                .receiptDate(receiptDatePicker.getValue())
                 .build();
 
         try {
             BookDto savedBookDto = bookService.save(bookDto);
-
             clearFields();
-
             NotifyDialogController.showNotification(
-                    ((javafx.scene.Node) actionEvent.getSource()).getScene().getWindow(),
+                    ((Node) actionEvent.getSource()).getScene().getWindow(),
                     "Book '" + savedBookDto.getTitle() + "' successfully created!",
                     NotifyDialogController.NotificationType.SUCCESS
             );
-        } catch (EntityException e) {
-            showError("Error saving Book: " + e.getMessage());
+        } catch (EntityException | IllegalArgumentException e) {
+            NotifyDialogController.showNotification(
+                    ((Node) actionEvent.getSource()).getScene().getWindow(),
+                    e.getMessage(),
+                    NotifyDialogController.NotificationType.ERROR
+            );
         }
 
     }
@@ -271,13 +253,5 @@ public class CreateBookController {
     @FXML
     public void cancelCreation(ActionEvent actionEvent) {
         MainController.loadMainMenuScene();
-    }
-
-    private void showError(String message) {
-        NotifyDialogController.showNotification(
-                receiptDatePicker.getScene().getWindow(),
-                "Input error: " + message,
-                NotifyDialogController.NotificationType.ERROR
-        );
     }
 }
