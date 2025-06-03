@@ -39,13 +39,15 @@ class BookServiceCRUDTest {
         UUID isbn = UUID.randomUUID();
         book1 = Book.builder()
                 .id(1L).title("Book One").isbn(isbn.toString()).language("English").numberOfPages(130)
-                .authors(Set.of()).genres(Set.of()).categories(Set.of()).publisher(mock(Publisher.class))
+                .authors(Set.of(mock(Author.class))).genres(Set.of(mock(Genre.class))).categories(Set.of(mock(Category.class)))
+                .publisher(mock(Publisher.class))
                 .status(Status.AVAILABLE).format(Format.HARDCOVER).receiptDate(LocalDate.now())
                 .build();
 
         bookDto1 = BookDto.builder()
                 .id(1L).title("Book One").isbn(isbn.toString()).language("English").numberOfPages(130)
-                .authors(Set.of()).genres(Set.of()).categories(Set.of()).publisher(mock(PublisherDto.class))
+                .authors(Set.of(mock(AuthorDto.class))).genres(Set.of(mock(GenreDto.class))).categories(Set.of(mock(CategoryDto.class)))
+                .publisher(mock(PublisherDto.class))
                 .status(Status.AVAILABLE).format(Format.HARDCOVER).receiptDate(LocalDate.now())
                 .build();
     }
@@ -191,7 +193,6 @@ class BookServiceCRUDTest {
         assertThrows(IllegalArgumentException.class, () -> bookServiceCRUD.findByCategories(Collections.emptyList()));
         verify(bookRepository, never()).findByCategoryIds(any());
     }
-
 
     @Test
     void findByPublisher_ReturnsListOfBookInstanceDto() {
