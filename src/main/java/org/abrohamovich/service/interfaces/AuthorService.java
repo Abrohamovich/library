@@ -10,21 +10,28 @@ import java.util.List;
 
 public interface AuthorService {
 
-    AuthorDto save(AuthorDto authorDto) throws EntityException, IllegalArgumentException;
+    AuthorDto save(AuthorDto authorDto)
+            throws EntityException, IllegalArgumentException;
 
-    AuthorDto findById(long id) throws AuthorNotFoundException;
+    AuthorDto findById(long id)
+            throws AuthorNotFoundException;
 
-    List<AuthorDto> findBySex(Sex sex) throws IllegalArgumentException;
+    List<AuthorDto> findBySex(Sex sex)
+            throws IllegalArgumentException;
 
-    List<AuthorDto> findByFullName(String fullName) throws IllegalArgumentException;
+    List<AuthorDto> findByFullName(String fullName)
+            throws IllegalArgumentException;
 
-    List<AuthorDto> findByFullNameLike(String fullName) throws IllegalArgumentException;
+    List<AuthorDto> findByFullNameLike(String fullName)
+            throws IllegalArgumentException;
 
     List<AuthorDto> findByBook(BookDto bookDto);
 
     List<AuthorDto> findAll();
 
-    AuthorDto update(AuthorDto authorDto) throws AuthorNotFoundException, IllegalArgumentException;
+    AuthorDto update(AuthorDto authorDto)
+            throws AuthorNotFoundException, IllegalArgumentException;
 
-    void delete(AuthorDto authorDto) throws AuthorNotFoundException, IllegalArgumentException;
+    void delete(AuthorDto authorDto)
+            throws AuthorNotFoundException, IllegalArgumentException;
 }

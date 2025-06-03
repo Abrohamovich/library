@@ -55,7 +55,7 @@ public class BookRepository implements GenericRepo<Book, Long> {
         try (EntityManager em = emf.createEntityManager()) {
             TypedQuery<Book> query = em.createQuery(
                     "SELECT b FROM Book b WHERE b.title ILIKE :title", Book.class);
-            query.setParameter("title", "%"+ title + "%");
+            query.setParameter("title", "%" + title + "%");
             return query.getResultList();
         } catch (PersistenceException e) {
             log.error("Persistence error while finding books by title {}: {}", title, e.getMessage());

@@ -7,10 +7,6 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.abrohamovich.config.EntityManagerFactoryProvider;
 import org.abrohamovich.controller.MainController;
-import org.abrohamovich.mapper.BookMapper;
-import org.abrohamovich.repository.BookRepository;
-import org.abrohamovich.service.BookServiceCRUD;
-import org.abrohamovich.service.interfaces.BookService;
 
 public class LibraryApplication extends Application {
 
