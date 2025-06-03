@@ -3,7 +3,6 @@ package org.abrohamovich.service;
 import lombok.extern.slf4j.Slf4j;
 import org.abrohamovich.dto.BookDto;
 import org.abrohamovich.dto.CategoryDto;
-import org.abrohamovich.entity.Author;
 import org.abrohamovich.entity.Category;
 import org.abrohamovich.exceptions.CategoryAlreadyExistException;
 import org.abrohamovich.exceptions.CategoryNotFoundException;
@@ -12,6 +11,7 @@ import org.abrohamovich.mapper.CategoryMapper;
 import org.abrohamovich.repository.CategoryRepository;
 import org.abrohamovich.service.interfaces.CategoryService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,6 +33,7 @@ public class CategoryServiceCRUD implements CategoryService {
             log.error("Invalid argument: null categoryDto");
             throw new IllegalArgumentException("Invalid argument: null categoryDto");
         }
+        validateCategoryDto(categoryDto);
         log.debug("Attempting to save category with name: {}", categoryDto.getName());
         if (repository.findByName(categoryDto.getName()).isPresent()) {
             log.warn("Category with name '{}' already exists", categoryDto.getName());
@@ -113,6 +114,7 @@ public class CategoryServiceCRUD implements CategoryService {
             log.error("Invalid argument: null categoryDto");
             throw new IllegalArgumentException("Invalid argument: null categoryDto");
         }
+        validateCategoryDto(categoryDto);
         log.debug("Attempting to update category with id: {}", categoryDto.getId());
         Optional<Category> category = repository.update(mapper.toEntity(categoryDto));
         if (category.isEmpty()) {
@@ -137,5 +139,22 @@ public class CategoryServiceCRUD implements CategoryService {
         }
         repository.deleteById(categoryDto.getId());
         log.info("Successfully deleted category with id: {}", categoryDto.getId());
+    }
+
+    private void validateCategoryDto(CategoryDto categoryDto) {
+        List<String> errors = new ArrayList<>();
+
+        if (categoryDto.getName() == null || categoryDto.getName().isBlank()) {
+            errors.add("Name is null or blank");
+        }
+        if (categoryDto.getDescription() == null || categoryDto.getDescription().isBlank()) {
+            errors.add("Description is null or blank");
+        }
+
+        if (!errors.isEmpty()) {
+            String errorMessage = String.join("; ", errors);
+            log.error("Validation failed for category: {}. Errors: {}", categoryDto.getName(), errorMessage);
+            throw new IllegalArgumentException("Validation failed: " + errorMessage);
+        }
     }
 }

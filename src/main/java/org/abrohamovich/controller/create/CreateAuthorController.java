@@ -13,7 +13,6 @@ import org.abrohamovich.entity.Sex;
 import org.abrohamovich.exceptions.EntityException;
 import org.abrohamovich.service.interfaces.AuthorService;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public class CreateAuthorController {
@@ -52,39 +51,25 @@ public class CreateAuthorController {
 
     @FXML
     public void createAuthor(ActionEvent actionEvent) {
-        String fullName = fullNameField.getText();
-        String nationality = nationalityField.getText();
-
-        if (fullName.isBlank() || nationality.isBlank()) {
-            NotifyDialogController.showNotification(
-                    fullNameField.getScene().getWindow(),
-                    "Incorrect input data",
-                    NotifyDialogController.NotificationType.ERROR
-            );
-        }
-
-
-        AuthorDto authorDto = new AuthorDto();
-        authorDto.setDateOfBirth(dateOfBirthPicker.getValue());
-        authorDto.setSex(sexComboBox.getValue());
-        authorDto.setFullName(fullName);
-        authorDto.setNationality(nationality);
+        AuthorDto authorDto = AuthorDto.builder()
+                .fullName(fullNameField.getText().trim())
+                .dateOfBirth(dateOfBirthPicker.getValue())
+                .sex(sexComboBox.getValue())
+                .nationality(nationalityField.getText().trim())
+                .build();
 
         try {
             authorService.save(authorDto);
-
             clearFields();
-
             NotifyDialogController.showNotification(
                     fullNameField.getScene().getWindow(),
                     "Author successfully saved!",
                     NotifyDialogController.NotificationType.SUCCESS
             );
-
-        } catch (EntityException e) {
+        } catch (IllegalArgumentException | EntityException e) {
             NotifyDialogController.showNotification(
                     fullNameField.getScene().getWindow(),
-                    "Something went wrong while saving Author!",
+                    e.getMessage(),
                     NotifyDialogController.NotificationType.ERROR
             );
         }

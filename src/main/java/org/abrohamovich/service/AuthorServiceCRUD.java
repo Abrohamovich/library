@@ -11,6 +11,8 @@ import org.abrohamovich.mapper.AuthorMapper;
 import org.abrohamovich.repository.AuthorRepository;
 import org.abrohamovich.service.interfaces.AuthorService;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,16 +30,23 @@ public class AuthorServiceCRUD implements AuthorService {
     @Override
     public AuthorDto save(AuthorDto authorDto) throws EntityException, IllegalArgumentException {
         if (authorDto == null) {
-            log.error("Invalid argument: null author");
-            throw new IllegalArgumentException("Invalid argument: null author");
+            log.error("Invalid argument: authorDto is null");
+            throw new IllegalArgumentException("Invalid arguments: authorDto is null");
         }
+
+        validateAuthorDto(authorDto);
+
         log.debug("Attempting to save author with full name: {}", authorDto.getFullName());
+
         Optional<Author> author = repository.save(mapper.toEntity(authorDto));
+
         if (author.isEmpty()) {
             log.error("Failed to save author with full name: {}", authorDto.getFullName());
             throw new EntityException("Something went wrong while saving " + authorDto.getFullName());
         }
+
         log.info("Successfully saved author with full name: {}", authorDto.getFullName());
+
         return mapper.toDto(author.get());
     }
 
@@ -116,18 +125,25 @@ public class AuthorServiceCRUD implements AuthorService {
     }
 
     @Override
-    public AuthorDto update(AuthorDto authorDto) throws AuthorNotFoundException {
+    public AuthorDto update(AuthorDto authorDto) throws AuthorNotFoundException, IllegalArgumentException {
         if (authorDto == null) {
-            log.error("Invalid argument: null author");
-            throw new IllegalArgumentException("Invalid argument: null author");
+            log.error("Invalid argument: authorDto is null");
+            throw new IllegalArgumentException("Invalid arguments: authorDto is null");
         }
+
+        validateAuthorDto(authorDto);
+
         log.debug("Attempting to update author with id: {}", authorDto.getId());
+
         Optional<Author> author = repository.update(mapper.toEntity(authorDto));
+
         if (author.isEmpty()) {
             log.warn("Author with id {} not found for update", authorDto.getId());
-            throw new AuthorNotFoundException("Could not find author with id " + authorDto.getId());
+            throw new AuthorNotFoundException("Could not find author " + authorDto);
         }
+
         log.info("Successfully updated author with id: {}", authorDto.getId());
+
         return mapper.toDto(author.get());
     }
 
@@ -145,5 +161,30 @@ public class AuthorServiceCRUD implements AuthorService {
         }
         repository.deleteById(authorDto.getId());
         log.info("Successfully deleted author with id: {}", authorDto.getId());
+    }
+
+    private void validateAuthorDto(AuthorDto authorDto) {
+        List<String> errors = new ArrayList<>();
+
+        if (authorDto.getFullName() == null || authorDto.getFullName().isBlank()) {
+            errors.add("Full name is null or blank");
+        }
+        if (authorDto.getNationality() == null || authorDto.getNationality().isBlank()) {
+            errors.add("Nationality is null or blank");
+        }
+        if (authorDto.getDateOfBirth() == null) {
+            errors.add("Date of birth is null");
+        } else if (authorDto.getDateOfBirth().isAfter(LocalDate.now())) {
+            errors.add("Date of birth cannot be in the future");
+        }
+        if (authorDto.getSex() == null) {
+            errors.add("Sex is null");
+        }
+
+        if (!errors.isEmpty()) {
+            String errorMessage = String.join("; ", errors);
+            log.error("Validation failed for author: {}. Errors: {}", authorDto.getFullName(), errorMessage);
+            throw new IllegalArgumentException("Validation failed: " + errorMessage);
+        }
     }
 }

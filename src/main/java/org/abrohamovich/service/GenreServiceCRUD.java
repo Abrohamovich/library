@@ -11,6 +11,7 @@ import org.abrohamovich.mapper.GenreMapper;
 import org.abrohamovich.repository.GenreRepository;
 import org.abrohamovich.service.interfaces.GenreService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +32,7 @@ public class GenreServiceCRUD implements GenreService {
             log.error("Invalid argument: null genreDto");
             throw new IllegalArgumentException("Invalid argument: null genreDto");
         }
+        validateGenreDto(genreDto);
         log.debug("Attempting to save genre with name: {}", genreDto.getName());
         if (repository.findByName(genreDto.getName()).isPresent()) {
             log.warn("Genre with name '{}' already exists", genreDto.getName());
@@ -127,6 +129,7 @@ public class GenreServiceCRUD implements GenreService {
             log.error("Invalid argument: null genreDto");
             throw new IllegalArgumentException("Invalid argument: null genreDto");
         }
+        validateGenreDto(genreDto);
         log.debug("Attempting to delete genre with id: {}", genreDto.getId());
         Optional<Genre> genre = repository.findById(genreDto.getId());
         if (genre.isEmpty()) {
@@ -135,5 +138,22 @@ public class GenreServiceCRUD implements GenreService {
         }
         repository.deleteById(genreDto.getId());
         log.info("Successfully deleted genre with id: {}", genreDto.getId());
+    }
+
+    private void validateGenreDto(GenreDto genreDto) {
+        List<String> errors = new ArrayList<>();
+
+        if (genreDto.getName() == null || genreDto.getName().isBlank()) {
+            errors.add("Name is null or blank");
+        }
+        if (genreDto.getDescription() == null || genreDto.getDescription().isBlank()) {
+            errors.add("Description is null or blank");
+        }
+
+        if (!errors.isEmpty()) {
+            String errorMessage = String.join("; ", errors);
+            log.error("Validation failed for genre: {}. Errors: {}", genreDto.getName(), errorMessage);
+            throw new IllegalArgumentException("Validation failed: " + errorMessage);
+        }
     }
 }

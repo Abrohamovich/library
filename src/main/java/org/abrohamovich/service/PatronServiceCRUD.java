@@ -11,6 +11,8 @@ import org.abrohamovich.mapper.PatronMapper;
 import org.abrohamovich.repository.PatronRepository;
 import org.abrohamovich.service.interfaces.PatronService;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +33,8 @@ public class PatronServiceCRUD implements PatronService {
             log.error("Invalid argument: null patronDto");
             throw new IllegalArgumentException("Invalid argument: null patronDto");
         }
+
+        validatePatronDto(patronDto);
 
         log.info("Attempting to save patron with card ID: {}", patronDto.getCardId());
         if (repository.findByCardId(patronDto.getCardId()).isPresent()) {
@@ -190,6 +194,8 @@ public class PatronServiceCRUD implements PatronService {
             throw new IllegalArgumentException("Invalid argument: null patronDto");
         }
 
+        validatePatronDto(patronDto);
+
         log.info("Updating patron with ID: {}", patronDto.getId());
         Optional<Patron> patron = repository.update(mapper.toEntity(patronDto));
         if (patron.isEmpty()) {
@@ -207,7 +213,6 @@ public class PatronServiceCRUD implements PatronService {
             log.error("Invalid argument: null patronDto");
             throw new IllegalArgumentException("Invalid argument: null patronDto");
         }
-
         log.info("Attempting to delete patron with ID: {}", patronDto.getId());
         Optional<Patron> category = repository.findById(patronDto.getId());
         if (category.isEmpty()) {
@@ -217,5 +222,41 @@ public class PatronServiceCRUD implements PatronService {
 
         repository.deleteById(patronDto.getId());
         log.info("Successfully deleted patron with ID: {}", patronDto.getId());
+    }
+
+    private void validatePatronDto(PatronDto patronDto) {
+        List<String> errors = new ArrayList<>();
+
+        if (patronDto.getFullName() == null || patronDto.getFullName().isBlank()) {
+            errors.add("Full name is null or blank");
+        }
+        if (patronDto.getCardId() == null || patronDto.getCardId().isBlank()) {
+            errors.add("Card id is null or blank");
+        }
+        if (patronDto.getPhone() == null || patronDto.getPhone().isBlank()) {
+            errors.add("Phone is null or blank");
+        }
+        if (patronDto.getEmail() == null || patronDto.getEmail().isBlank()) {
+            errors.add("Email is null or blank");
+        }
+        if (patronDto.getAddress() == null || patronDto.getAddress().isBlank()) {
+            errors.add("Address is null or blank");
+        }
+        if (patronDto.getDateOfBirth() == null) {
+            errors.add("Date of birth is null");
+        } else if (patronDto.getDateOfBirth().isAfter(LocalDate.now())) {
+            errors.add("Date of birth cannot be in the future");
+        }
+        if (patronDto.getRegisterDate() == null) {
+            errors.add("Registration date is null");
+        } else if (patronDto.getRegisterDate().isAfter(LocalDate.now())) {
+            errors.add("Registration date cannot be in the future");
+        }
+
+        if (!errors.isEmpty()) {
+            String errorMessage = String.join("; ", errors);
+            log.error("Validation failed for genre: {}. Errors: {}", patronDto, errorMessage);
+            throw new IllegalArgumentException("Validation failed: " + errorMessage);
+        }
     }
 }

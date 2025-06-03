@@ -83,38 +83,24 @@ public class ManageGenreController {
     public void saveGenre(ActionEvent actionEvent) {
         if (selectedGenreForEdit == null) return;
 
-        String newName = nameField.getText();
-        String newDescription = descriptionField.getText();
-
-        if (newName.isBlank() || newDescription.isBlank()) {
-            NotifyDialogController.showNotification(
-                    ((Node) actionEvent.getSource()).getScene().getWindow(),
-                    "Incorrect input data",
-                    NotifyDialogController.NotificationType.ERROR
-            );
-        }
-
-        selectedGenreForEdit.setName(newName);
-        selectedGenreForEdit.setDescription(newDescription);
+        selectedGenreForEdit.setName(nameField.getText().trim());
+        selectedGenreForEdit.setDescription(descriptionField.getText().trim());
 
         try {
             genreService.update(selectedGenreForEdit);
-
             NotifyDialogController.showNotification(
                     ((Node) actionEvent.getSource()).getScene().getWindow(),
                     "Genre was updated successfully!",
                     NotifyDialogController.NotificationType.SUCCESS
             );
-        } catch (GenreNotFoundException e) {
+        } catch (GenreNotFoundException | IllegalArgumentException e) {
             NotifyDialogController.showNotification(
                     ((Node) actionEvent.getSource()).getScene().getWindow(),
-                    "Genre you want to update does not exist!",
+                    e.getMessage(),
                     NotifyDialogController.NotificationType.ERROR
             );
         }
-
         loadAllGenres();
-
         cancelEdit(null);
     }
 

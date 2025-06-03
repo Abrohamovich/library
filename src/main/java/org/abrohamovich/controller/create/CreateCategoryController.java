@@ -34,41 +34,23 @@ public class CreateCategoryController {
 
     @FXML
     public void createCategory(ActionEvent actionEvent) {
-        String name = nameField.getText();
-        String description = descriptionArea.getText();
-
-        if (name.isBlank() || description.isBlank()) {
-            NotifyDialogController.showNotification(
-                    nameField.getScene().getWindow(),
-                    "Incorrect input data!",
-                    NotifyDialogController.NotificationType.ERROR
-            );
-        }
-
-        CategoryDto categoryDto = new CategoryDto();
-        categoryDto.setName(name);
-        categoryDto.setDescription(description);
+        CategoryDto categoryDto = CategoryDto.builder()
+                .name(nameField.getText().trim())
+                .description(descriptionArea.getText().trim())
+                .build();
 
         try {
             categoryService.save(categoryDto);
-
             clearFields();
-
             NotifyDialogController.showNotification(
                     nameField.getScene().getWindow(),
                     "Category successfully saved!",
                     NotifyDialogController.NotificationType.SUCCESS
             );
-        } catch (GenreAlreadyExistException e) {
+        } catch (GenreAlreadyExistException | EntityException | IllegalArgumentException e) {
             NotifyDialogController.showNotification(
                     nameField.getScene().getWindow(),
-                    "Category with this name already exists!",
-                    NotifyDialogController.NotificationType.ERROR
-            );
-        } catch (EntityException e) {
-            NotifyDialogController.showNotification(
-                    nameField.getScene().getWindow(),
-                    "Something went wrong while saving category!",
+                    e.getMessage(),
                     NotifyDialogController.NotificationType.ERROR
             );
         }

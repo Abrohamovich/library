@@ -3,7 +3,6 @@ package org.abrohamovich.service;
 import lombok.extern.slf4j.Slf4j;
 import org.abrohamovich.dto.BookDto;
 import org.abrohamovich.dto.PublisherDto;
-import org.abrohamovich.entity.Genre;
 import org.abrohamovich.entity.Publisher;
 import org.abrohamovich.exceptions.EntityException;
 import org.abrohamovich.exceptions.PublisherAlreadyExistException;
@@ -12,6 +11,8 @@ import org.abrohamovich.mapper.PublisherMapper;
 import org.abrohamovich.repository.PublisherRepository;
 import org.abrohamovich.service.interfaces.PublisherService;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,6 +33,7 @@ public class PublisherServiceCRUD implements PublisherService {
             log.error("Invalid argument: null publisherDto");
             throw new IllegalArgumentException("Invalid argument: null publisherDto");
         }
+        validatePublisherDto(publisherDto);
         log.debug("Attempting to save publisher with name: {}", publisherDto.getName());
         if (repository.findByName(publisherDto.getName()).isPresent()) {
             log.warn("Publisher with name '{}' already exists", publisherDto.getName());
@@ -164,6 +166,7 @@ public class PublisherServiceCRUD implements PublisherService {
             log.error("Invalid argument: null publisherDto");
             throw new IllegalArgumentException("Invalid argument: null publisherDto");
         }
+        validatePublisherDto(publisherDto);
         log.debug("Attempting to update publisher with id: {}", publisherDto.getId());
         Optional<Publisher> publisher = repository.update(mapper.toEntity(publisherDto));
         if (publisher.isEmpty()) {
@@ -188,5 +191,34 @@ public class PublisherServiceCRUD implements PublisherService {
         }
         repository.deleteById(publisherDto.getId());
         log.info("Successfully deleted publisher with id: {}", publisherDto.getId());
+    }
+
+    private void validatePublisherDto(PublisherDto publisherDto) {
+        List<String> errors = new ArrayList<>();
+
+        if (publisherDto.getName() == null || publisherDto.getName().isBlank()) {
+            errors.add("Name is null or blank");
+        }
+        if (publisherDto.getAddress() != null && publisherDto.getAddress().isBlank()) {
+            publisherDto.setAddress(null);
+        }
+        if (publisherDto.getEmail() != null && publisherDto.getEmail().isBlank()) {
+            publisherDto.setEmail(null);
+        }
+        if (publisherDto.getWebsite() != null && publisherDto.getWebsite().isBlank()) {
+            publisherDto.setWebsite(null);
+        }
+        if (publisherDto.getFoundationDate() == null) {
+            errors.add("Foundation date is null");
+        } else if (publisherDto.getFoundationDate().isAfter(LocalDate.now())) {
+            errors.add("Foundation date cannot be in the future");
+        }
+
+
+        if (!errors.isEmpty()) {
+            String errorMessage = String.join("; ", errors);
+            log.error("Validation failed for publisher: {}. Errors: {}", publisherDto, errorMessage);
+            throw new IllegalArgumentException("Validation failed: " + errorMessage);
+        }
     }
 }

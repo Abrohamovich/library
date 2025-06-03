@@ -18,8 +18,6 @@ import org.abrohamovich.dto.PublisherDto;
 import org.abrohamovich.exceptions.PublisherNotFoundException;
 import org.abrohamovich.service.interfaces.PublisherService;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 import java.util.List;
 
 public class ManagePublisherController {
@@ -105,45 +103,27 @@ public class ManagePublisherController {
     public void savePublisher(ActionEvent actionEvent) {
         if (selectedPublisherForEdit == null) return;
 
-        String newName = nameField.getText().trim();
-        LocalDate newDateOfBirth = foundationDatePicker.getValue();
-        String newAddress = addressField.getText().trim();
-        String newEmail = emailField.getText().trim();
-        String newWebsite = websiteField.getText().trim();
-
-        if (newName.isBlank() || newAddress.isBlank() ||
-                newEmail.isBlank() || newWebsite.isBlank()) {
-            NotifyDialogController.showNotification(
-                    ((Node) actionEvent.getSource()).getScene().getWindow(),
-                    "Incorrect input data!",
-                    NotifyDialogController.NotificationType.ERROR
-            );
-        }
-
-        selectedPublisherForEdit.setName(newName);
-        selectedPublisherForEdit.setFoundationDate(newDateOfBirth);
-        selectedPublisherForEdit.setAddress(newAddress);
-        selectedPublisherForEdit.setEmail(newEmail);
-        selectedPublisherForEdit.setWebsite(newWebsite);
+        selectedPublisherForEdit.setName(nameField.getText().trim());
+        selectedPublisherForEdit.setFoundationDate(foundationDatePicker.getValue());
+        selectedPublisherForEdit.setAddress(addressField.getText().trim());
+        selectedPublisherForEdit.setEmail(emailField.getText().trim());
+        selectedPublisherForEdit.setWebsite(websiteField.getText().trim());
 
         try {
             publisherService.update(selectedPublisherForEdit);
-
             NotifyDialogController.showNotification(
                     ((Node) actionEvent.getSource()).getScene().getWindow(),
                     "Publisher was successfully updated!",
                     NotifyDialogController.NotificationType.ERROR
             );
-        } catch (PublisherNotFoundException e) {
+        } catch (PublisherNotFoundException | IllegalArgumentException e) {
             NotifyDialogController.showNotification(
                     ((Node) actionEvent.getSource()).getScene().getWindow(),
-                    "Publisher you want to update does not exist!",
+                    e.getMessage(),
                     NotifyDialogController.NotificationType.ERROR
             );
         }
-
         loadAllPublishers();
-
         cancelEdit(null);
     }
 

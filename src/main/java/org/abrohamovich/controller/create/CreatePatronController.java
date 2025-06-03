@@ -2,10 +2,8 @@ package org.abrohamovich.controller.create;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
 import org.abrohamovich.controller.MainController;
 import org.abrohamovich.controller.NotifyDialogController;
 import org.abrohamovich.dto.PatronDto;
@@ -75,35 +73,28 @@ public class CreatePatronController {
 
     @FXML
     public void createPatron(ActionEvent actionEvent) {
-        PatronDto patronDto = new PatronDto();
-        patronDto.setFullName(fullNameField.getText());
-        patronDto.setCardId(cardIdField.getText());
-        patronDto.setEmail(emailField.getText());
-        patronDto.setPhone(phoneField.getText());
-        patronDto.setAddress(addressField.getText());
-        patronDto.setDateOfBirth(dateOfBirthPicker.getValue());
-        patronDto.setRegisterDate(registerDatePicker.getValue());
+        PatronDto patronDto = PatronDto.builder()
+                .fullName(fullNameField.getText().trim())
+                .cardId(cardIdField.getText().trim())
+                .email(emailField.getText().trim())
+                .phone(phoneField.getText().trim())
+                .address(addressField.getText().trim())
+                .dateOfBirth(dateOfBirthPicker.getValue())
+                .registerDate(registerDatePicker.getValue())
+                .build();
 
         try {
             patronService.save(patronDto);
-
             clearFields();
-
             NotifyDialogController.showNotification(
                     cardIdField.getScene().getWindow(),
                     "Patron successfully saved!",
                     NotifyDialogController.NotificationType.SUCCESS
             );
-        } catch (PatronAlreadyExistException e) {
+        } catch (PatronAlreadyExistException | IllegalArgumentException | EntityException e) {
             NotifyDialogController.showNotification(
                     cardIdField.getScene().getWindow(),
-                    "Patron with this cardId already exists!",
-                    NotifyDialogController.NotificationType.ERROR
-            );
-        } catch (EntityException e) {
-            NotifyDialogController.showNotification(
-                    cardIdField.getScene().getWindow(),
-                    "Something went wrong while saving patron!",
+                    e.getMessage(),
                     NotifyDialogController.NotificationType.ERROR
             );
         }
